@@ -22,11 +22,13 @@ public class LocalFileStorageTests : IDisposable
         Assert.Equal("food-scans/abc123.jpg", path);
         Assert.True(File.Exists(Path.Combine(_root, "food-scans", "abc123.jpg")));
 
-        await using var stream = await storage.OpenAsync("food-scans", "abc123.jpg");
-        Assert.NotNull(stream);
-        using var memory = new MemoryStream();
-        await stream!.CopyToAsync(memory);
-        Assert.Equal(bytes, memory.ToArray());
+        await using (var stream = await storage.OpenAsync("food-scans", "abc123.jpg"))
+        {
+            Assert.NotNull(stream);
+            using var memory = new MemoryStream();
+            await stream!.CopyToAsync(memory);
+            Assert.Equal(bytes, memory.ToArray());
+        } // dispose before deleting — Windows keeps deleted-but-open files locked
 
         await storage.DeleteAsync("food-scans", "abc123.jpg");
         Assert.Null(await storage.OpenAsync("food-scans", "abc123.jpg"));

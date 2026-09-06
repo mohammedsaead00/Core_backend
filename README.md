@@ -2,7 +2,7 @@
 
 The .NET / SQL Server backend for **CoreGym** — a fitness, nutrition and coaching app — migrated from Supabase (PostgreSQL 17).
 
-**Status: Phase 3 complete** ✅ — schema, authorization, business-logic services, authenticated REST API, Stripe webhook, OneSignal push, AI endpoints (Gemini), file storage and both schedulers, verified by 105 integration tests.
+**Status: Phase 3 complete** ✅ — schema, authorization, business-logic services, authenticated REST API, Stripe webhook, OneSignal push, AI endpoints (Gemini), file storage and both schedulers, verified by 127 integration tests plus a one-command end-to-end verification script.
 
 | | |
 |---|---|
@@ -13,7 +13,7 @@ The .NET / SQL Server backend for **CoreGym** — a fitness, nutrition and coach
 | Business logic | 7 application services replacing the original SECURITY DEFINER functions/triggers/RPCs |
 | API | JWT-authenticated REST endpoints (Bearer; symmetric-key or OIDC modes) — see [docs/API.md](docs/API.md) |
 | Integrations | Stripe webhook (signature-verified), OneSignal push, Gemini AI (food image/voice/text + barcode), local file storage, two background schedulers |
-| Tests | 105/105 passing — schema, constraints, triggers, views, authorization, business logic, HTTP end-to-end, webhooks, push, AI parsing, reminders |
+| Tests | 127/127 passing — schema, constraints, triggers, views, authorization, business logic, HTTP end-to-end, webhooks, push, AI parsing, reminders |
 
 ---
 
@@ -45,15 +45,25 @@ CoreGym.sln
 
 **Prerequisites:** .NET 10 SDK, SQL Server (any edition; tests use LocalDB `(localdb)\MSSQLLocalDB`), `dotnet-ef` tool (`dotnet tool install --global dotnet-ef`).
 
+### Verify everything in one command
+
+```powershell
+powershell -ExecutionPolicy Bypass -File verify.ps1
+```
+
+This builds the solution, runs all 127 tests, boots the real API on a scratch
+LocalDB database (migrations applied on startup), walks the main user flows
+over HTTP — sign-up, onboarding, goals, nutrition logging with automatic
+summary sync, streak, workouts, chat, public data, JWT enforcement, webhook
+signature rejection — and prints a PASS/FAIL checklist. Add `-SkipTests` for a
+faster run and `-KeepDb` to keep the scratch database for inspection.
+
 ```bash
-# build + run the full integration test suite (creates & drops a scratch database automatically)
-dotnet test CoreGym.sln
+# or run the pieces manually:
+dotnet test CoreGym.sln                                                   # integration tests
 
-# apply migrations to your own SQL Server database
 dotnet ef database update --project src/CoreGym.Infrastructure --connection "<your connection string>"
-
-# or produce the full idempotent SQL script
-dotnet ef migrations script --idempotent --project src/CoreGym.Infrastructure
+dotnet ef migrations script --idempotent --project src/CoreGym.Infrastructure   # full SQL script
 ```
 
 Per-unit review scripts live in [`SQL/`](SQL/) (`001`–`005` + a Supabase backport for the `reviews` table).
@@ -67,6 +77,7 @@ Per-unit review scripts live in [`SQL/`](SQL/) (`001`–`005` + a Supabase backp
 | [docs/AUTHORIZATION.md](docs/AUTHORIZATION.md) | The RLS → .NET authorization mapping and how to use the policy |
 | [docs/BUSINESS_LOGIC.md](docs/BUSINESS_LOGIC.md) | Phase 2 services ↔ original SQL functions, inferred semantics, Phase 3 boundaries |
 | [docs/API.md](docs/API.md) | HTTP API reference: auth modes, conventions, endpoint tables |
+| [docs/USER_FLOWS.md](docs/USER_FLOWS.md) | User journeys drawn as diagrams: onboarding, nutrition logging, coaching, reminders |
 | [docs/REVIEW_CHECKLIST.md](docs/REVIEW_CHECKLIST.md) | Open items to confirm before production cutover |
 | [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md) | Full decision log, session-by-session |
 | [docs/source-documents/](docs/source-documents/) | Original Supabase inventory + the Phase 1 migration brief |

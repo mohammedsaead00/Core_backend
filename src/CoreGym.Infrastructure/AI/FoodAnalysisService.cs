@@ -32,7 +32,7 @@ public class FoodAnalysisService : IFoodAnalysisService
         var imagePath = await _storage.SaveAsync(
             "food-scans",
             $"{Guid.NewGuid():N}{ExtensionFor(mimeType ?? "image/jpeg")}",
-            new MemoryStream(Convert.FromBase64String(imageBase64)),
+            new MemoryStream(DecodeBase64(imageBase64)),
             cancellationToken);
 
         var scan = new FoodScan
@@ -59,7 +59,7 @@ public class FoodAnalysisService : IFoodAnalysisService
         var audioPath = await _storage.SaveAsync(
             "voice-food-logs",
             $"{Guid.NewGuid():N}{ExtensionFor(mimeType ?? "audio/mp4")}",
-            new MemoryStream(Convert.FromBase64String(audioBase64)),
+            new MemoryStream(DecodeBase64(audioBase64)),
             cancellationToken);
 
         var log = new VoiceFoodLog
@@ -163,6 +163,18 @@ public class FoodAnalysisService : IFoodAnalysisService
         }
 
         return new FoodAnalysisResult(isFood, confidence, transcript, items);
+    }
+
+    private static byte[] DecodeBase64(string value)
+    {
+        try
+        {
+            return Convert.FromBase64String(value);
+        }
+        catch (FormatException exception)
+        {
+            throw new ArgumentException("The media payload is not valid base64.", exception);
+        }
     }
 
     private static string ExtractJson(string text)

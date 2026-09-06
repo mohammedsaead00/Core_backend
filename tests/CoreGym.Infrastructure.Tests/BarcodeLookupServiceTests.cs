@@ -3,6 +3,7 @@ using System.Text;
 using CoreGym.Domain.Entities;
 using CoreGym.Domain.Services;
 using CoreGym.Infrastructure.AI;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreGym.Infrastructure.Tests;
 

@@ -1,13 +1,15 @@
 using CoreGym.Domain.Entities;
 using CoreGym.Domain.Services;
 using CoreGym.Infrastructure.Notifications;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreGym.Infrastructure.Tests;
 
 /// <summary>
 /// Verifies the send-meal-reminders replacement: per-window dedupe via
 /// notification_log, Cairo-timezone quiet hours and already-logged skip,
-/// and push-failure retry semantics.
+/// and push-failure retry semantics. Assertions are scoped to the test's own
+/// user because the service intentionally walks every profile in the database.
 /// </summary>
 [Collection("sql-smoke")]
 public class MealReminderServiceTests
@@ -26,10 +28,8 @@ public class MealReminderServiceTests
         var push = new CapturingPush();
 
         await using var ctx = _fx.CreateContext();
-        var summary = await new MealReminderService(ctx, push).RunAsync(Now);
+        await new MealReminderService(ctx, push).RunAsync(Now);
 
-        Assert.Equal(1, summary.ProfilesChecked);
-        Assert.Equal(1, summary.RemindersSent);
         var sent = Assert.Single(push.Sent);
         Assert.Equal(userId, sent.userId);
         Assert.Equal(MealReminderService.Title, sent.title);
@@ -44,6 +44,7 @@ public class MealReminderServiceTests
     public async Task Skips_users_who_already_logged_food_today_cairo()
     {
         var userId = await CreateUserAsync(_fx.Context);
+        var push = new CapturingPush();
         await using (var ctx = _fx.CreateContext())
         {
             ctx.NutritionLogs.Add(new NutritionLog
@@ -58,10 +59,11 @@ public class MealReminderServiceTests
         }
 
         await using var ctx2 = _fx.CreateContext();
-        var summary = await new MealReminderService(ctx2, new CapturingPush()).RunAsync(Now);
+        await new MealReminderService(ctx2, push).RunAsync(Now);
 
-        Assert.Equal(1, summary.SkippedAlreadyLogged);
-        Assert.Equal(0, summary.RemindersSent);
+        Assert.DoesNotContain(push.Sent, s => s.userId == userId);
+        await using var ctx3 = _fx.CreateContext();
+        Assert.False(await ctx3.NotificationLogs.AnyAsync(l => l.UserId == userId));
     }
 
     [Fact]
@@ -77,8 +79,8 @@ public class MealReminderServiceTests
         await using var ctx2 = _fx.CreateContext();
         var summary = await new MealReminderService(ctx2, new CapturingPush()).RunAsync(Now);
 
-        Assert.Equal(1, summary.SkippedAlreadyReminded);
-        Assert.Equal(0, summary.RemindersSent);
+        // Global count (every profile in the shared DB) — the per-user proof is below.
+        Assert.True(summary.SkippedAlreadyReminded >= 1);
         Assert.Equal(1, await ctx2.NotificationLogs.CountAsync(l => l.UserId == userId));
     }
 
@@ -86,6 +88,7 @@ public class MealReminderServiceTests
     public async Task Quiet_hours_are_evaluated_in_cairo_local_time()
     {
         var userId = await CreateUserAsync(_fx.Context);
+        var push = new CapturingPush();
         await using (var ctx = _fx.CreateContext())
         {
             // 10:00 Cairo falls inside 08:00–23:00 quiet hours.
@@ -99,16 +102,18 @@ public class MealReminderServiceTests
         }
 
         await using var ctx2 = _fx.CreateContext();
-        var summary = await new MealReminderService(ctx2, new CapturingPush()).RunAsync(Now);
+        await new MealReminderService(ctx2, push).RunAsync(Now);
 
-        Assert.Equal(1, summary.SkippedQuietHours);
-        Assert.Equal(0, summary.RemindersSent);
+        Assert.DoesNotContain(push.Sent, s => s.userId == userId);
+        await using var ctx3 = _fx.CreateContext();
+        Assert.False(await ctx3.NotificationLogs.AnyAsync(l => l.UserId == userId));
     }
 
     [Fact]
     public async Task Disabled_reminders_are_skipped()
     {
         var userId = await CreateUserAsync(_fx.Context);
+        var push = new CapturingPush();
         await using (var ctx = _fx.CreateContext())
         {
             ctx.NotificationPreferences.Add(new NotificationPreference
@@ -120,10 +125,11 @@ public class MealReminderServiceTests
         }
 
         await using var ctx2 = _fx.CreateContext();
-        var summary = await new MealReminderService(ctx2, new CapturingPush()).RunAsync(Now);
+        await new MealReminderService(ctx2, push).RunAsync(Now);
 
-        Assert.Equal(1, summary.SkippedDisabled);
-        Assert.Equal(0, summary.RemindersSent);
+        Assert.DoesNotContain(push.Sent, s => s.userId == userId);
+        await using var ctx3 = _fx.CreateContext();
+        Assert.False(await ctx3.NotificationLogs.AnyAsync(l => l.UserId == userId));
     }
 
     [Fact]

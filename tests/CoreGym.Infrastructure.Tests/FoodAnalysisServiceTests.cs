@@ -2,6 +2,7 @@ using System.Text.Json;
 using CoreGym.Domain.Entities;
 using CoreGym.Domain.Services;
 using CoreGym.Infrastructure.AI;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreGym.Infrastructure.Tests;
 
@@ -82,6 +83,7 @@ public class FoodAnalysisServiceTests
     [Fact]
     public async Task ExtractFromText_is_stateless()
     {
+        var userId = await CreateUserAsync(_fx.Context);
         var storage = new InMemoryFileStorage();
         await using var ctx = _fx.CreateContext();
 
@@ -91,8 +93,8 @@ public class FoodAnalysisServiceTests
         Assert.True(result.IsFood);
         Assert.Equal("2 eggs and toast", result.Transcript);
         Assert.Empty(storage.AllPaths());
-        Assert.False(await ctx.FoodScans.AnyAsync());
-        Assert.False(await ctx.VoiceFoodLogs.AnyAsync());
+        Assert.False(await ctx.FoodScans.AnyAsync(s => s.UserId == userId));
+        Assert.False(await ctx.VoiceFoodLogs.AnyAsync(l => l.UserId == userId));
     }
 
     [Fact]
