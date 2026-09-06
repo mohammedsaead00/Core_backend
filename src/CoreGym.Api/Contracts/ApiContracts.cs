@@ -139,3 +139,10 @@ public record CoachSubscriptionResponse(
 public record SetActiveProgramRequest(Guid ProgramId, int? CurrentWeek, int? CurrentDay, string? Notes);
 
 public record StreakActivityRequest(string Source);
+
+// --- AI ---
+public record AnalyzeFoodImageRequest(string ImageBase64, string? MimeType, string? Notes);
+
+public record AnalyzeFoodVoiceRequest(string AudioBase64, string? MimeType, string? Notes);
+
+public record AnalyzeFoodTextRequest(string Text);

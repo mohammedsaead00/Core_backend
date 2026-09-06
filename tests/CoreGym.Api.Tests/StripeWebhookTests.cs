@@ -24,7 +24,7 @@ public class StripeWebhookTests
     [Fact]
     public async Task Invalid_signature_is_rejected()
     {
-        var body = BuildEvent("checkout.session.completed", new { id = "cs_1", object = "checkout.session" });
+        var body = BuildEvent("checkout.session.completed", new { id = "cs_1", @object = "checkout.session" });
         var response = await PostWebhookAsync(body, "t=1,v1=deadbeef");
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -74,8 +74,9 @@ public class StripeWebhookTests
     public async Task Replaying_the_same_event_is_idempotent()
     {
         var clientId = await CreateUserAsync();
-        var (coachId, _) = await CreateCoachAsync();
+        var (coachId, coachUserId) = await CreateCoachAsync();
         var subscription = await CreateSubscriptionAsync(clientId, coachId, "pending");
+        await CreateCoachProfileAsync(coachUserId);
 
         var body = BuildEvent("checkout.session.completed", new
         {
@@ -95,7 +96,8 @@ public class StripeWebhookTests
         await using var ctx = _fx.CreateContext();
         Assert.Equal(1, await ctx.PaymentIntents.CountAsync(pi => pi.StripePaymentId == "pi_test_2"));
         Assert.Equal(1, await ctx.StripeCustomers.CountAsync(sc => sc.StripeCustomerId == "cus_test_2"));
-        Assert.Equal(1, await ctx.CoachProfiles.CountAsync(cp => cp.CurrentClients == 1));
+        Assert.Equal(1, (await ctx.CoachProfiles.AsNoTracking().SingleAsync(cp => cp.Id == coachUserId)).CurrentClients);
+        Assert.Equal("active", (await ctx.Subscriptions.AsNoTracking().SingleAsync(s => s.Id == subscription)).Status);
     }
 
     [Fact]

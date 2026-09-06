@@ -18,6 +18,7 @@ builder.Services.AddCoreGymAuthorization();
 builder.Services.AddCoreGymApplicationServices();
 builder.Services.AddCoreGymIntegrations(builder.Configuration);
 builder.Services.AddHostedService<StreakFreezeResetJob>();
+builder.Services.AddHostedService<MealReminderJob>();
 
 ConfigureJwt(builder);
 

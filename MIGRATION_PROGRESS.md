@@ -220,3 +220,13 @@ Legend: `[x]` done (schema + EF config + migration + tests) · `[~]` in progress
 - **`StreakFreezeResetJob`** hosted service: hourly probe, resets freezes on the 1st (UTC) — replaces the `streak-freeze-monthly-reset` pg_cron job. Added `appsettings.json` to the API with all integration placeholders.
 - Tests: **101/101 passed** (12 new: signature verification incl. tamper/replay/multi-v1, push request shaping + no-op, webhook end-to-end over HTTP incl. replay idempotency and status transitions).
 - **Remaining Phase 3:** AI endpoints (analyze-food, log-food-voice/text, lookup-barcode), meal reminders, file storage.
+
+### 2026-09-07 — Session 3 (continued) — PHASE 3 UNIT 3: AI + STORAGE + REMINDERS — PHASE 3 COMPLETE
+- **AI endpoints** (`/api/ai/food/image|voice|text`, `/api/ai/barcode/{barcode}`), replacing the four AI Edge Functions:
+  - `IGeminiClient` (HTTP impl against generateContent, `Gemini:ApiKey`/`Gemini:Model`, 503 via controller when unconfigured) keeps everything testable with scripted responses.
+  - `IFoodAnalysisService`: image → `food_scans`+items (media saved to the `food-scans` bucket), voice → `voice_food_logs`+items (with transcript, media in `voice-food-logs`), text → stateless result; strict-JSON prompt contract, tolerant parsing (markdown-fenced output, missing fields default 0).
+  - `IBarcodeLookupService`: cache (increments `lookup_count`) → Open Food Facts (requires a product name + kcal) → Gemini estimate; successful fills cached with source `openfoodfacts`/`gemini_estimate` (CHECK-constrained) and confidence high/low.
+- **File storage**: `IFileStorage` (Save/Open/Delete per bucket — the eight Supabase bucket names) + `LocalFileStorage` (path-traversal-guarded local disk, `Storage:LocalRoot`). `GET /api/files/{bucket}/{path}` anonymous for public buckets, token for private; `POST /api/files/{bucket}` authenticated upload. Cloud providers plug in behind the interface.
+- **`MealReminderService` + `MealReminderJob`**: replaces the last pg_cron job — probes every 10 minutes, runs at 06/12/18 UTC (08/14/20 Cairo); per user: skip disabled → quiet hours (Cairo local, overnight spans handled) → already logged today (Cairo date) → already reminded this window (`notification_log` window dedupe); push best-effort, and a failed push is NOT logged so the window retries.
+- Tests: **105/105 passed** (16 new: AI parsing/persistence/stateless, 3-tier barcode flow, reminder windows/quiet-hours/dedupe/retry, storage roundtrip + traversal guards).
+- **Phase 3 complete.** Remaining follow-ups (non-blocking): auth-provider decision, prod validation of inferred semantics (REVIEW_CHECKLIST), cloud storage provider behind `IFileStorage`, per-owner ACL on private files.

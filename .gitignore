@@ -15,6 +15,9 @@ TestResults/
 *.trx
 *.coverage
 
+# Local file storage (dev default)
+file-storage/
+
 # OS
 Thumbs.db
 .DS_Store

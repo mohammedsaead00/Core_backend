@@ -94,6 +94,22 @@ Two interchangeable JWT configuration modes (see `Jwt` section in
 | GET | `/api/coach/clients/{clientUserId}/measurements` | Policy-guarded |
 | GET | `/api/coach/clients/{clientUserId}/workouts?from&to` | Policy-guarded |
 
+### AI & files
+| Method | Route | Notes |
+|---|---|---|
+| POST | `/api/ai/food/image` | `{ imageBase64, mimeType?, notes? }` — Gemini vision → persists `food_scans` + items (media stored in `food-scans` bucket) |
+| POST | `/api/ai/food/voice` | `{ audioBase64, mimeType?, notes? }` — Gemini audio → persists `voice_food_logs` (with transcript) + items |
+| POST | `/api/ai/food/text` | `{ text }` — stateless extraction; the client confirms and logs via `POST /api/nutrition/logs` |
+| GET | `/api/ai/barcode/{barcode}` | 3-tier lookup: cache (increments `lookup_count`) → Open Food Facts → Gemini estimate; successful fills are cached |
+| GET | `/api/files/{bucket}/{**path}` | Public buckets (`avatars`, `coach-media`, `coach-pdfs`) anonymous; private buckets require a token |
+| POST | `/api/files/{bucket}` | Authenticated upload (multipart form `file`); returns `{ path }` |
+
+AI endpoints answer **503** when `Gemini:ApiKey` is not configured. The Gemini
+model defaults to the one the original project used (`Gemini:Model`), and the
+food-analysis prompt asks for the same strict JSON contract the original Edge
+Functions used (items with `name`, `name_ar`, `estimated_weight_g`, calories
+and macros, plus `is_food`/`confidence`).
+
 ### Webhooks
 | Method | Route | Notes |
 |---|---|---|
@@ -110,15 +126,20 @@ dotnet run --project src/CoreGym.Api
 #   Database__MigrateOnStartup  = true    # applies EF migrations on boot
 #   Stripe__WebhookSecret       = "whsec_..."       # webhook endpoint returns 503 without it
 #   OneSignal__AppId / OneSignal__RestApiKey    # push is a no-op without them
+#   Gemini__ApiKey / Gemini__Model              # AI endpoints return 503 without a key
+#   Storage__LocalRoot          = "file-storage" # local file storage root
 ```
 
 Background jobs: `StreakFreezeResetJob` (hosted service) replaces the
 `streak-freeze-monthly-reset` pg_cron job — it probes hourly and resets
-`freeze_available` on the 1st of each month (UTC).
+`freeze_available` on the 1st of each month (UTC). `MealReminderJob` replaces
+`coregym-meal-reminders` — it probes every 10 minutes and runs the reminder
+pass at 06:00/12:00/18:00 UTC (08:00/14:00/20:00 Cairo), skipping users who
+disabled reminders, are in quiet hours, already logged food today (Cairo), or
+were already reminded in the current window.
 
-## Not exposed yet (later Phase 3 units)
+## Not exposed yet
 
-- AI endpoints replacing the Edge Functions (`analyze-food`, `log-food-voice`,
-  `log-food-text`, `lookup-barcode`) and the meal-reminder scheduler
-  (`send-meal-reminders`).
-- File upload endpoints for the Supabase storage buckets.
+- File storage behind cloud providers (Azure Blob/S3) — `IFileStorage` is the
+  seam; `LocalFileStorage` ships as the default implementation.
+- Per-owner ACL on private bucket downloads (currently: any authenticated user).
