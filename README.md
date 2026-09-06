@@ -2,7 +2,7 @@
 
 The .NET / SQL Server backend for **CoreGym** — a fitness, nutrition and coaching app — migrated from Supabase (PostgreSQL 17).
 
-**Status: Phase 1 + Phase 2 + API layer complete** ✅ — full database schema, authorization service, business-logic services, and an authenticated HTTP API, verified by 93 integration tests.
+**Status: Phase 1 + Phase 2 + API layer + integrations complete** ✅ — schema, authorization, business-logic services, authenticated REST API, Stripe webhook, OneSignal push and the freeze-reset scheduler, verified by 101 integration tests.
 
 | | |
 |---|---|
@@ -12,7 +12,8 @@ The .NET / SQL Server backend for **CoreGym** — a fitness, nutrition and coach
 | Authorization | Replaces Postgres RLS with a reusable .NET policy (`OwnDataOrActiveCoach`), enforced end-to-end through the API |
 | Business logic | 7 application services replacing the original SECURITY DEFINER functions/triggers/RPCs |
 | API | JWT-authenticated REST endpoints (Bearer; symmetric-key or OIDC modes) — see [docs/API.md](docs/API.md) |
-| Tests | 93/93 passing — schema shape, defaults, constraints, triggers, views, authorization, business logic, HTTP end-to-end |
+| Integrations | Stripe webhook (signature-verified), OneSignal push (no-op when unconfigured), streak-freeze monthly scheduler |
+| Tests | 101/101 passing — schema shape, defaults, constraints, triggers, views, authorization, business logic, HTTP end-to-end, webhooks, push |
 
 ---
 
@@ -83,4 +84,5 @@ Per-unit review scripts live in [`SQL/`](SQL/) (`001`–`005` + a Supabase backp
 - ~~**Phase 1** — database schema + authorization service~~ ✅
 - ~~**Phase 2** — business-logic services (streaks, summary sync, messaging, notifications, subscription lifecycle, coach ratings, profile provisioning)~~ ✅
 - ~~**Phase 3, unit 1** — REST API (JWT auth incl. OIDC mode, endpoints for all core flows, policy-guarded coach views)~~ ✅
-- **Phase 3, remaining** — Stripe webhook HTTP receiver, OneSignal push, AI endpoints (food analysis, barcode lookup, meal reminders), scheduler for the freeze reset, file storage for the Supabase buckets, auth-provider decision (the API already accepts either symmetric or OIDC tokens).
+- ~~**Phase 3, unit 2** — Stripe webhook receiver (signature-verified), OneSignal push, freeze-reset scheduler~~ ✅
+- **Phase 3, remaining** — AI endpoints (food analysis, barcode lookup, meal reminders), file storage for the Supabase buckets, auth-provider decision (the API already accepts either symmetric or OIDC tokens).

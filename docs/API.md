@@ -94,6 +94,11 @@ Two interchangeable JWT configuration modes (see `Jwt` section in
 | GET | `/api/coach/clients/{clientUserId}/measurements` | Policy-guarded |
 | GET | `/api/coach/clients/{clientUserId}/workouts?from&to` | Policy-guarded |
 
+### Webhooks
+| Method | Route | Notes |
+|---|---|---|
+| POST | `/api/webhooks/stripe` | Signature-verified (Stripe `t`/`v1` HMAC scheme); unauthenticated by design. Handles `checkout.session.completed` (activates the subscription via `ISubscriptionLifecycleService`, records `payment_intents`, maps `stripe_customers`, stores `stripe_sub_id`) and `customer.subscription.updated`/`deleted` (status transitions). Idempotent on Stripe's retries. Requires `Stripe:WebhookSecret`; 503 when unconfigured. |
+
 ## Running
 
 ```bash
@@ -102,14 +107,18 @@ dotnet run --project src/CoreGym.Api
 #   ConnectionStrings__CoreGym  = "Server=...;Database=CoreGym;..."
 #   Jwt__SigningKey             = "<≥32-char secret>"   (or Jwt__Authority for OIDC)
 # optional:
-#   Database__MigrateOnStartup  = true   # applies EF migrations on boot
+#   Database__MigrateOnStartup  = true    # applies EF migrations on boot
+#   Stripe__WebhookSecret       = "whsec_..."       # webhook endpoint returns 503 without it
+#   OneSignal__AppId / OneSignal__RestApiKey    # push is a no-op without them
 ```
+
+Background jobs: `StreakFreezeResetJob` (hosted service) replaces the
+`streak-freeze-monthly-reset` pg_cron job — it probes hourly and resets
+`freeze_available` on the 1st of each month (UTC).
 
 ## Not exposed yet (later Phase 3 units)
 
-- Stripe webhook HTTP receiver (signature verification) — the DB side exists via
-  `ISubscriptionLifecycleService`.
 - AI endpoints replacing the Edge Functions (`analyze-food`, `log-food-voice`,
-  `log-food-text`, `lookup-barcode`).
-- OneSignal push dispatch and the meal-reminder scheduler.
+  `log-food-text`, `lookup-barcode`) and the meal-reminder scheduler
+  (`send-meal-reminders`).
 - File upload endpoints for the Supabase storage buckets.

@@ -27,6 +27,8 @@ public sealed class ApiSmokeFixture : IAsyncLifetime
 
     public string SigningKey { get; } = "coregym-test-signing-key-0123456789abcdef0123456789abcdef";
 
+    public string StripeWebhookSecret { get; } = "whsec_coregym_test_secret";
+
     public WebApplicationFactory<Program> Factory { get; private set; } = null!;
 
     public Task InitializeAsync()
@@ -45,6 +47,7 @@ public sealed class ApiSmokeFixture : IAsyncLifetime
             builder.UseSetting("Jwt:Audience", Audience);
             builder.UseSetting("Jwt:SigningKey", SigningKey);
             builder.UseSetting("Database:MigrateOnStartup", "false");
+            builder.UseSetting("Stripe:WebhookSecret", StripeWebhookSecret);
         });
 
         return Task.CompletedTask;

@@ -1,5 +1,6 @@
 using CoreGym.Domain.Entities;
 using CoreGym.Domain.Services;
+using CoreGym.Infrastructure.Integrations;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreGym.Infrastructure.Services;
@@ -7,10 +8,12 @@ namespace CoreGym.Infrastructure.Services;
 public class MessagingService : IMessagingService
 {
     private readonly CoreGymDbContext _db;
+    private readonly IPushNotificationService _push;
 
-    public MessagingService(CoreGymDbContext db)
+    public MessagingService(CoreGymDbContext db, IPushNotificationService? push = null)
     {
         _db = db;
+        _push = push ?? new NullPushNotificationService();
     }
 
     public async Task<Message> SendMessageAsync(Guid conversationId, Guid senderId, string content, string type = "text", string? fileUrl = null, CancellationToken cancellationToken = default)
@@ -78,6 +81,27 @@ public class MessagingService : IMessagingService
         });
 
         await _db.SaveChangesAsync(cancellationToken);
+
+        // The OneSignal side of notify_new_message: best-effort — a push
+        // failure must never fail the message send (already persisted above).
+        try
+        {
+            await _push.SendToUsersAsync(
+                new[] { recipientId },
+                string.IsNullOrWhiteSpace(senderName) ? "New message" : senderName!,
+                preview,
+                new Dictionary<string, string>
+                {
+                    ["conversationId"] = conversationId.ToString(),
+                    ["type"] = "chat_message",
+                },
+                cancellationToken);
+        }
+        catch (Exception)
+        {
+            // Push delivery is retried by the client-side notification polling.
+        }
+
         return message;
     }
 

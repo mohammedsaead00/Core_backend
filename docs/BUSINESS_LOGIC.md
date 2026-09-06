@@ -58,13 +58,23 @@ not captured. Confirm with `SELECT pg_get_functiondef(...)` on prod and adjust:
    messages; the original may use bilingual wording (the notification `title`
    here is the sender's profile name).
 
-## Deliberately out of scope (Phase 3)
+## Push integration (OneSignal)
 
-- OneSignal push integration (the HTTP side of `notify_new_message`).
-- Stripe webhook HTTP receiver (signature verification + event dispatch) — the
-  DB side already exists via `ISubscriptionLifecycleService` and the
-  `payment_intents` writes planned for the webhook port.
-- AI Edge Functions (`analyze-food`, `log-food-voice`, `log-food-text`,
-  `lookup-barcode`) and the meal-reminder cron (`send-meal-reminders`).
-- Scheduler host for `ResetMonthlyFreezesAsync` (replaces the two pg_cron jobs
-  that are not push-related).
+`IPushNotificationService` is the HTTP side of the original `notify_new_message`
+trigger. `OneSignalPushService` posts to OneSignal's REST API targeting users by
+`external_id` alias (= user id), with bilingual `headings`/`contents` and deep-link
+`data` (`conversationId`, `type: chat_message`); it is a **no-op when
+`OneSignal:AppId` is not configured**, so local development and tests never hit
+the network. `MessagingService.SendMessageAsync` fires it best-effort after the
+message and in-app notification are persisted — a push failure never fails the
+send. The exact wording/data of the original push is unconfirmed (see the
+inferred-semantics list above).
+
+## Deliberately out of scope (remaining Phase 3 units)
+
+- AI endpoints (`analyze-food`, `log-food-voice`, `log-food-text`,
+  `lookup-barcode`) and the meal-reminder scheduler (`send-meal-reminders`).
+- File upload endpoints for the Supabase storage buckets.
+
+(Done in earlier units: Stripe webhook HTTP receiver — signature verification +
+`IStripeWebhookService`; OneSignal push; `StreakFreezeResetJob` scheduler.)

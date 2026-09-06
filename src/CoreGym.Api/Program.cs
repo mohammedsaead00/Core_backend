@@ -1,7 +1,9 @@
 using System.Text;
 using CoreGym.Api;
+using CoreGym.Api.Jobs;
 using CoreGym.Infrastructure;
 using CoreGym.Infrastructure.Authorization;
+using CoreGym.Infrastructure.Integrations;
 using CoreGym.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,8 @@ builder.Services.AddDbContext<CoreGymDbContext>(options =>
 
 builder.Services.AddCoreGymAuthorization();
 builder.Services.AddCoreGymApplicationServices();
+builder.Services.AddCoreGymIntegrations(builder.Configuration);
+builder.Services.AddHostedService<StreakFreezeResetJob>();
 
 ConfigureJwt(builder);
 

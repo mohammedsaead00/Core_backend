@@ -210,3 +210,13 @@ Legend: `[x]` done (schema + EF config + migration + tests) · `[~]` in progress
 - .NET 10 gotcha handled: `RespectRequiredConstructorParameters` now defaults to **true** — request DTOs must declare C# defaults for optional fields (chat `type`, onboarding `completed`, workout `durationMin`).
 - Tests: **93/93 passed** (12 new HTTP end-to-end). Full plan in docs/API.md.
 - **Remaining Phase 3:** Stripe webhook receiver, OneSignal push, AI endpoints, meal reminders, scheduler, file storage.
+
+### 2026-09-07 — Session 3 — PHASE 3 UNIT 2: INTEGRATIONS COMPLETE
+- **Stripe webhook receiver** (`POST /api/webhooks/stripe`, unauthenticated by design): Stripe `t`/`v1` HMAC signature verification (`StripeSignatureVerifier`, constant-time compare + 5-minute replay tolerance), then `IStripeWebhookService`:
+  - `checkout.session.completed` → activates the subscription (metadata contract INFERRED: `supabase_uid` = client user id, `coach_id` = coaches.id, optional `subscription_id`; falls back to the latest pending subscription for the pair), stores `stripe_sub_id`, records `payment_intents` (amount in Stripe minor units — open question 10) and maps `stripe_customers`; **idempotent on Stripe's retries** (payment intent id is the dedupe key).
+  - `customer.subscription.updated`/`deleted` → maps Stripe statuses (active/trialing→active, canceled/unpaid/incomplete*→cancelled, past_due→pending) and transitions via `ISubscriptionLifecycleService`.
+  - 503 when `Stripe:WebhookSecret` is unconfigured; 400 on bad signature.
+- **OneSignal push**: `IPushNotificationService` + `OneSignalPushService` (targets `external_id` aliases = user ids, bilingual headings/contents, deep-link data) — **no-op when `OneSignal:AppId` is unconfigured**, so dev/tests never hit the network. `MessagingService.SendMessageAsync` fires it best-effort after persistence.
+- **`StreakFreezeResetJob`** hosted service: hourly probe, resets freezes on the 1st (UTC) — replaces the `streak-freeze-monthly-reset` pg_cron job. Added `appsettings.json` to the API with all integration placeholders.
+- Tests: **101/101 passed** (12 new: signature verification incl. tamper/replay/multi-v1, push request shaping + no-op, webhook end-to-end over HTTP incl. replay idempotency and status transitions).
+- **Remaining Phase 3:** AI endpoints (analyze-food, log-food-voice/text, lookup-barcode), meal reminders, file storage.
