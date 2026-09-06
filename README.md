@@ -2,7 +2,7 @@
 
 The .NET / SQL Server backend for **CoreGym** — a fitness, nutrition and coaching app — migrated from Supabase (PostgreSQL 17).
 
-**Status: Phase 1 complete** ✅ — full database schema + authorization service, verified by 50 integration tests.
+**Status: Phase 1 + Phase 2 complete** ✅ — full database schema, authorization service, and the business-logic layer, verified by 81 integration tests.
 
 | | |
 |---|---|
@@ -10,7 +10,8 @@ The .NET / SQL Server backend for **CoreGym** — a fitness, nutrition and coach
 | Source platform | Supabase (PostgreSQL 17, project `mkrjvrnysuvtokqkyoll`) |
 | Schema coverage | **42 of 44 tables ported** + 3 views (2 legacy tables intentionally dropped) |
 | Authorization | Replaces Postgres RLS with a reusable .NET policy (`OwnDataOrActiveCoach`) |
-| Tests | 50/50 passing — schema shape, defaults, constraints, triggers, views, authorization |
+| Business logic | 7 application services replacing the original SECURITY DEFINER functions/triggers/RPCs |
+| Tests | 81/81 passing — schema shape, defaults, constraints, triggers, views, authorization, business logic |
 
 ---
 
@@ -19,7 +20,8 @@ The .NET / SQL Server backend for **CoreGym** — a fitness, nutrition and coach
 - **Complete SQL Server schema** matching the Supabase backend: 42 tables with FKs, performance indexes, `updated_at` triggers, and CHECK constraints (including newly added ones for `profiles.role` and `subscriptions.status`).
 - **Three read views** — `personal_records`, `weekly_progress`, `weight_progress` — plus keyless EF read models to query them.
 - **Authorization service** — the exact .NET replacement for the recurring RLS pattern *"a user can see their own data; a coach can see a client's data if there's an active subscription"* (`ICurrentUserService`, `IClientAccessService`, `OwnDataOrActiveCoach` policy).
-- **No endpoints yet** — by design. Phase 1 is data + auth layers only; controllers and business logic (streaks, summary sync, chat triggers, payments) come next.
+- **Business-logic services (Phase 2)** — streaks with the monthly freeze, daily-summary sync, messaging (previews, unread counters, notifications), notification read-marking, subscription lifecycle (conversation + client counting), coach rating recalculation, and profile provisioning.
+- **No endpoints yet** — by design. Phases 1–2 are data, auth and service layers; controllers come next.
 
 ## Solution structure
 
@@ -59,6 +61,7 @@ Per-unit review scripts live in [`SQL/`](SQL/) (`001`–`005` + a Supabase backp
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Solution layout, type-mapping conventions, trigger handling, testing approach |
 | [docs/SCHEMA.md](docs/SCHEMA.md) | Full table inventory by group, views, constraints, index strategy |
 | [docs/AUTHORIZATION.md](docs/AUTHORIZATION.md) | The RLS → .NET authorization mapping and how to use the policy |
+| [docs/BUSINESS_LOGIC.md](docs/BUSINESS_LOGIC.md) | Phase 2 services ↔ original SQL functions, inferred semantics, Phase 3 boundaries |
 | [docs/REVIEW_CHECKLIST.md](docs/REVIEW_CHECKLIST.md) | Open items to confirm before production cutover |
 | [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md) | Full decision log, session-by-session |
 | [docs/source-documents/](docs/source-documents/) | Original Supabase inventory + the Phase 1 migration brief |
@@ -73,5 +76,6 @@ Per-unit review scripts live in [`SQL/`](SQL/) (`001`–`005` + a Supabase backp
 
 ## Roadmap
 
-- **Phase 2** — business logic: streak RPCs, nutrition/workout → `daily_summary` sync, chat/notification triggers, subscription-accepted hook, coach rating refresh, Stripe webhook port.
-- **Phase 3** — API layer (controllers/endpoints), file storage replacement for Supabase buckets, push notifications (OneSignal).
+- ~~**Phase 1** — database schema + authorization service~~ ✅
+- ~~**Phase 2** — business-logic services (streaks, summary sync, messaging, notifications, subscription lifecycle, coach ratings, profile provisioning)~~ ✅
+- **Phase 3** — API layer (controllers/endpoints + auth integration), Stripe webhook HTTP receiver, OneSignal push, AI functions (food analysis, barcode lookup, meal reminders), scheduler for the freeze reset, file storage for the Supabase buckets.

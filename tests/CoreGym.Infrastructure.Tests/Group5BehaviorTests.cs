@@ -97,7 +97,8 @@ public class Group5BehaviorTests
             Content = "plain",
         });
         await _fx.Context.SaveChangesAsync();
-        var textMessage = await ctx.Messages.AsNoTracking().SingleAsync(m => m.Id != message.Id);
+        var textMessage = await ctx.Messages.AsNoTracking()
+            .SingleAsync(m => m.ConversationId == conversationId && m.Id != message.Id);
         Assert.Equal("text", textMessage.Type);
 
         // Undocumented type value is rejected by the CHECK constraint.

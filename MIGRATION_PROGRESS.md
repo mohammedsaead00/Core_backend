@@ -186,3 +186,17 @@ Legend: `[x]` done (schema + EF config + migration + tests) · `[~]` in progress
 - **Phase 1 status: 42 of the original 44 tables ported** (coach_reviews and coach_subscriptions intentionally dropped — decisions 2026-09-06), plus 3 views, 11 updated_at triggers, 7 CHECK constraints, and the Authorization Service.
 - **Remaining before Phase 1 sign-off (all recorded above):** (a) validate inferred view definitions vs prod, (b) confirm FK/cascade + unique-constraint assumptions (open questions 5, 6, 13), (c) run the SELECT DISTINCT pre-flights on prod before data migration, (d) confirm notifications.coach_id key space (12), (e) deployability check of the Stripe functions on current prod.
 - **Next session:** Phase 1 final review → then Phase 2 (business-logic triggers/RPCs: streaks, summary sync, chat/notification triggers, subscription-accepted hook, coach rating refresh) and/or the API layer.
+
+### 2026-09-06 — Session 2 — PHASE 2 COMPLETE (business logic)
+- **Design decision:** the original SECURITY DEFINER functions/triggers/RPCs are reproduced as **.NET application services** (`Infrastructure/Services`, interfaces in `Domain/Services`), not SQL Server triggers — testable, and HTTP push can't live in a trigger anyway. DB triggers remain only for the mechanical `updated_at` stampers.
+- Seven services registered via `AddCoreGymApplicationServices()`:
+  - `IStreakService` — `record_daily_activity` / `get_streak_status` / freeze monthly reset (consecutive-day increments, one-missed-day forgiveness consuming `freeze_available`, reset otherwise, idempotent per source/day).
+  - `IDailySummaryService` — `sync_nutrition_to_summary` / `sync_workout_to_summary` (upsert; creates a summary row only when data exists).
+  - `IMessagingService` — `notify_new_message` + `update_conversation_on_message` (type-aware preview, unread counters) + `mark_conversation_read` + `unread_count` (participant-only enforcement).
+  - `INotificationService` — `mark_notification_read` / `mark_all_notifications_read` (own-only).
+  - `ISubscriptionLifecycleService` — `handle_subscription_accepted` (status transition, conversation create/update, `current_clients` increment/decrement floored at 0, idempotent transitions). The future Stripe webhook endpoint calls this.
+  - `ICoachRatingService` — `update_coach_rating` / `refresh_coach_rating` (average over reviews; 0 when none).
+  - `IProfileProvisioningService` — `handle_new_user` (idempotent profile row).
+- Tests: **81/81 passed** (31 new). Three test bugs were caught and fixed along the way (shared-DB assumptions in older tests after the messaging tests started populating tables).
+- **Inferred semantics flagged** (validate via `pg_get_functiondef` on prod): streak rule details, chat notification `type = 'chat_message'`, preview wording. See docs/BUSINESS_LOGIC.md.
+- **Deferred to Phase 3:** API layer + auth integration, Stripe webhook HTTP receiver, OneSignal push, AI functions (analyze-food, log-food-voice/text, lookup-barcode), meal reminders, scheduler host for the freeze reset, file storage.
