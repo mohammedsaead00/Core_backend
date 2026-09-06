@@ -200,3 +200,13 @@ Legend: `[x]` done (schema + EF config + migration + tests) · `[~]` in progress
 - Tests: **81/81 passed** (31 new). Three test bugs were caught and fixed along the way (shared-DB assumptions in older tests after the messaging tests started populating tables).
 - **Inferred semantics flagged** (validate via `pg_get_functiondef` on prod): streak rule details, chat notification `type = 'chat_message'`, preview wording. See docs/BUSINESS_LOGIC.md.
 - **Deferred to Phase 3:** API layer + auth integration, Stripe webhook HTTP receiver, OneSignal push, AI functions (analyze-food, log-food-voice/text, lookup-barcode), meal reminders, scheduler host for the freeze reset, file storage.
+
+### 2026-09-06 — Session 2 (continued) — PHASE 3 UNIT 1: REST API COMPLETE
+- New `src/CoreGym.Api` (ASP.NET Core, controllers) + `tests/CoreGym.Api.Tests` (WebApplicationFactory end-to-end HTTP tests with test-signed JWTs).
+- **Auth:** dual-mode JWT bearer — `Jwt:SigningKey` (HS256, dev/test/any symmetric issuer) or `Jwt:Authority` (any OIDC provider). User id always from the token claim; the IdP decision remains open but both paths are wired (open question 7 partially resolved).
+- **16 controllers** covering: profile provisioning/read/update, onboarding, goals, daily summary, nutrition logs (with summary re-sync), body measurements, workouts (sessions+sets with summary re-sync, app-level set deletion before the Restrict FK), streak activity/status, foods/exercises/programs (anonymous reference data), active program, chat (send/list/read/unread), notifications (+preferences), coach directory/reviews (rating recalc on POST), subscriptions (client + coach views), and four policy-guarded coach-client views.
+- The reusable `OwnDataOrActiveCoach` policy is enforced through the real `IAuthorizationService` on the coach endpoints — verified over HTTP: active subscription → 200 with the client's data, unrelated user → 403, lapsed subscription → 403.
+- Conventions: camelCase JSON, enums as camelCase strings (matches Supabase's lowercase), RFC 7807 problem details (404/403/400 mapped from domain exceptions), OpenAPI at `/openapi/v1.json` (dev), optional `Database:MigrateOnStartup`.
+- .NET 10 gotcha handled: `RespectRequiredConstructorParameters` now defaults to **true** — request DTOs must declare C# defaults for optional fields (chat `type`, onboarding `completed`, workout `durationMin`).
+- Tests: **93/93 passed** (12 new HTTP end-to-end). Full plan in docs/API.md.
+- **Remaining Phase 3:** Stripe webhook receiver, OneSignal push, AI endpoints, meal reminders, scheduler, file storage.

@@ -2,16 +2,17 @@
 
 The .NET / SQL Server backend for **CoreGym** — a fitness, nutrition and coaching app — migrated from Supabase (PostgreSQL 17).
 
-**Status: Phase 1 + Phase 2 complete** ✅ — full database schema, authorization service, and the business-logic layer, verified by 81 integration tests.
+**Status: Phase 1 + Phase 2 + API layer complete** ✅ — full database schema, authorization service, business-logic services, and an authenticated HTTP API, verified by 93 integration tests.
 
 | | |
 |---|---|
-| Stack | .NET 10 · EF Core 10 (SQL Server provider) · xUnit |
+| Stack | .NET 10 · ASP.NET Core Web API · EF Core 10 (SQL Server provider) · xUnit |
 | Source platform | Supabase (PostgreSQL 17, project `mkrjvrnysuvtokqkyoll`) |
 | Schema coverage | **42 of 44 tables ported** + 3 views (2 legacy tables intentionally dropped) |
-| Authorization | Replaces Postgres RLS with a reusable .NET policy (`OwnDataOrActiveCoach`) |
+| Authorization | Replaces Postgres RLS with a reusable .NET policy (`OwnDataOrActiveCoach`), enforced end-to-end through the API |
 | Business logic | 7 application services replacing the original SECURITY DEFINER functions/triggers/RPCs |
-| Tests | 81/81 passing — schema shape, defaults, constraints, triggers, views, authorization, business logic |
+| API | JWT-authenticated REST endpoints (Bearer; symmetric-key or OIDC modes) — see [docs/API.md](docs/API.md) |
+| Tests | 93/93 passing — schema shape, defaults, constraints, triggers, views, authorization, business logic, HTTP end-to-end |
 
 ---
 
@@ -29,11 +30,13 @@ The .NET / SQL Server backend for **CoreGym** — a fitness, nutrition and coach
 CoreGym.sln
 ├── src/
 │   ├── CoreGym.Domain/             entities, enums, authorization abstractions, view read models (no EF references)
-│   └── CoreGym.Infrastructure/     DbContext, EF configurations, migrations, authorization service
+│   ├── CoreGym.Infrastructure/     DbContext, EF configurations, migrations, authorization + business-logic services
+│   └── CoreGym.Api/                ASP.NET Core REST API (JWT bearer, controllers, OpenAPI)
 ├── tests/
-│   └── CoreGym.Infrastructure.Tests/  integration tests against a scratch SQL Server LocalDB database
+│   ├── CoreGym.Infrastructure.Tests/  integration tests against a scratch SQL Server LocalDB database
+│   └── CoreGym.Api.Tests/             end-to-end HTTP tests via WebApplicationFactory + test JWTs
 ├── SQL/                            generated idempotent SQL scripts (one per migration) + Supabase backport
-├── docs/                           architecture, schema, authorization, review checklist
+├── docs/                           architecture, schema, authorization, business logic, API, review checklist
 └── MIGRATION_PROGRESS.md           decision log & resume point (kept current after every unit of work)
 ```
 
@@ -62,6 +65,7 @@ Per-unit review scripts live in [`SQL/`](SQL/) (`001`–`005` + a Supabase backp
 | [docs/SCHEMA.md](docs/SCHEMA.md) | Full table inventory by group, views, constraints, index strategy |
 | [docs/AUTHORIZATION.md](docs/AUTHORIZATION.md) | The RLS → .NET authorization mapping and how to use the policy |
 | [docs/BUSINESS_LOGIC.md](docs/BUSINESS_LOGIC.md) | Phase 2 services ↔ original SQL functions, inferred semantics, Phase 3 boundaries |
+| [docs/API.md](docs/API.md) | HTTP API reference: auth modes, conventions, endpoint tables |
 | [docs/REVIEW_CHECKLIST.md](docs/REVIEW_CHECKLIST.md) | Open items to confirm before production cutover |
 | [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md) | Full decision log, session-by-session |
 | [docs/source-documents/](docs/source-documents/) | Original Supabase inventory + the Phase 1 migration brief |
@@ -78,4 +82,5 @@ Per-unit review scripts live in [`SQL/`](SQL/) (`001`–`005` + a Supabase backp
 
 - ~~**Phase 1** — database schema + authorization service~~ ✅
 - ~~**Phase 2** — business-logic services (streaks, summary sync, messaging, notifications, subscription lifecycle, coach ratings, profile provisioning)~~ ✅
-- **Phase 3** — API layer (controllers/endpoints + auth integration), Stripe webhook HTTP receiver, OneSignal push, AI functions (food analysis, barcode lookup, meal reminders), scheduler for the freeze reset, file storage for the Supabase buckets.
+- ~~**Phase 3, unit 1** — REST API (JWT auth incl. OIDC mode, endpoints for all core flows, policy-guarded coach views)~~ ✅
+- **Phase 3, remaining** — Stripe webhook HTTP receiver, OneSignal push, AI endpoints (food analysis, barcode lookup, meal reminders), scheduler for the freeze reset, file storage for the Supabase buckets, auth-provider decision (the API already accepts either symmetric or OIDC tokens).
