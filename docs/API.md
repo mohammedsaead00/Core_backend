@@ -110,6 +110,40 @@ food-analysis prompt asks for the same strict JSON contract the original Edge
 Functions used (items with `name`, `name_ar`, `estimated_weight_g`, calories
 and macros, plus `is_food`/`confidence`).
 
+### Insights (read views)
+| Method | Route | Notes |
+|---|---|---|
+| GET | `/api/me/personal-records?exerciseName&limit` | Per-exercise bests from the `personal_records` view |
+| GET | `/api/me/weekly-progress?limit` | Weekly goal-completion from the `weekly_progress` view |
+| GET | `/api/me/weight-progress?limit` | Weight history + change from the `weight_progress` view |
+| GET | `/api/coach/clients/{clientUserId}/personal-records` | Policy-guarded coach view |
+
+### Daily & weekly activity, progress, programs, barcode history
+| Method | Route | Notes |
+|---|---|---|
+| GET/POST/PUT | `/api/me/daily-activity` (+ `/{id}`) | Health Connect ingest; create + update own (no delete, per prod RLS) |
+| GET/PUT | `/api/me/weekly-activity` | PUT upserts per (weekStart, dayIndex) for the charts |
+| GET/POST | `/api/me/exercise-progress?sessionId&exerciseId&date` | Per-session bests |
+| GET/POST/PUT/DELETE | `/api/me/user-programs` (+ `/{id}`) | Full own CRUD; muscle group CHECK-validated |
+| GET/POST | `/api/me/barcode-scans` | Scan history (barcode nullable) |
+
+### Coach dashboard, content & subscription management
+| Method | Route | Notes |
+|---|---|---|
+| GET | `/api/coach/clients` | Active subscriptions ⋈ client profiles (dashboard list) |
+| GET/POST/PUT/DELETE | `/api/coach/content` (+ `/{id}`) | Own content library; DELETE returns 409 when assigned |
+| GET | `/api/coaches/{coachId}/content` | Client-readable: public items + items assigned to the caller |
+| POST | `/api/coach/assignments` | Assign content to a client (content must be the coach's) |
+| GET | `/api/coach/assignments` · `/api/me/assignments` | Both sides' assignment lists incl. content info |
+| GET/POST/PUT/DELETE | `/api/coach/subscriptions/{id}/phases` (+ `/{phaseId}`) | Coach manages phases of own subscriptions |
+| GET | `/api/me/subscriptions/{id}/phases` | Client reads own subscription's phases |
+| GET/PUT | `/api/coach/onboarding` | Own coach-onboarding row (PUT upserts) |
+| POST | `/api/coach/subscriptions` | Coach creates a subscription (pending; tier basic/standard/premium) |
+| PATCH | `/api/coach/subscriptions/{id}/status` | Lifecycle status change — evicts the authorization cache so access changes take effect immediately |
+
+`IClientAccessService` results are cached for 60 s and evicted by the
+subscription lifecycle service on every status transition.
+
 ### Webhooks
 | Method | Route | Notes |
 |---|---|---|

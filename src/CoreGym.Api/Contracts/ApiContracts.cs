@@ -146,3 +146,149 @@ public record AnalyzeFoodImageRequest(string ImageBase64, string? MimeType, stri
 public record AnalyzeFoodVoiceRequest(string AudioBase64, string? MimeType, string? Notes);
 
 public record AnalyzeFoodTextRequest(string Text);
+
+// --- daily/weekly activity, exercise progress, user programs, barcode scans ---
+public record CreateDailyActivityRequest(
+    DateTime? Date,
+    int? Steps,
+    decimal? ActiveCaloriesBurned,
+    decimal? HeartRateAvg,
+    decimal? ExerciseMinutes,
+    string? Source,
+    DateTimeOffset? SyncedAt);
+
+public record UpdateDailyActivityRequest(
+    int? Steps,
+    decimal? ActiveCaloriesBurned,
+    decimal? HeartRateAvg,
+    decimal? ExerciseMinutes,
+    string? Source,
+    DateTimeOffset? SyncedAt);
+
+public record UpsertWeeklyActivityRequest(DateTime WeekStart, int DayIndex, int? ActualPct, int? GoalPct);
+
+public record CreateExerciseProgressRequest(
+    Guid? ExerciseId,
+    Guid? SessionId,
+    DateTime? SessionDate,
+    decimal? BestSetWeight,
+    int? BestSetReps,
+    decimal? TotalVolume,
+    decimal? OneRmEstimate);
+
+public record CreateUpdateUserProgramRequest(string ProgramName, string MuscleGroup, bool? IsActive, DateTimeOffset? StartedAt);
+
+public record RecordBarcodeScanRequest(string? Barcode, decimal? QuantityG, Guid? NutritionLogId);
+
+// --- coach side ---
+public record CoachClientResponse(
+    Guid SubscriptionId,
+    Guid ClientId,
+    string? ClientName,
+    string? AvatarUrl,
+    string? Status,
+    string? Tier,
+    DateTime? StartDate,
+    DateTime? EndDate,
+    DateTimeOffset? ExpiresAt);
+
+public record CreateCoachContentRequest(
+    string Title,
+    string Type,
+    string FileUrl,
+    string? Description,
+    bool IsPublic,
+    string? ThumbnailUrl,
+    int? FileSizeKb,
+    int SortOrder = 0);
+
+public record UpdateCoachContentRequest(
+    string? Title,
+    string? Type,
+    string? FileUrl,
+    string? Description,
+    bool? IsPublic,
+    string? ThumbnailUrl,
+    int? FileSizeKb,
+    int? SortOrder);
+
+public record CoachContentResponse(
+    Guid Id,
+    Guid CoachId,
+    string Title,
+    string? Description,
+    string Type,
+    string FileUrl,
+    bool IsPublic,
+    string? ThumbnailUrl,
+    int? FileSizeKb,
+    int SortOrder,
+    DateTimeOffset? CreatedAt);
+
+public record CreateAssignmentRequest(Guid ClientId, Guid ContentId, string? Note);
+
+public record AssignmentResponse(
+    Guid Id,
+    Guid CoachId,
+    Guid ClientId,
+    Guid ContentId,
+    string? Note,
+    DateTimeOffset? AssignedAt,
+    string? ContentTitle,
+    string? ContentType,
+    string? ContentFileUrl);
+
+public record CreatePhaseRequest(int PhaseNumber, string Title, string? Type, string? Description, int? DurationWeeks, string? Status);
+
+public record UpdatePhaseRequest(
+    string? Title,
+    string? Type,
+    string? Description,
+    int? DurationWeeks,
+    string? Status,
+    DateTimeOffset? StartedAt,
+    DateTimeOffset? CompletedAt);
+
+public record PhaseResponse(
+    Guid Id,
+    Guid SubscriptionId,
+    int PhaseNumber,
+    string Title,
+    string? Type,
+    string? Description,
+    int? DurationWeeks,
+    string? Status,
+    DateTimeOffset? StartedAt,
+    DateTimeOffset? CompletedAt);
+
+public record CreateSubscriptionRequest(
+    Guid ClientId,
+    string Tier,
+    Guid? PlanId,
+    DateTime? EndDate,
+    DateTimeOffset? ExpiresAt,
+    string? Goals,
+    string? Notes);
+
+public record UpdateSubscriptionStatusRequest(string Status);
+
+public record UpsertCoachOnboardingRequest(
+    string? DisplayName,
+    int? YearsExperience,
+    List<string>? Certifications,
+    List<string>? Specialization,
+    string? Bio,
+    decimal? PriceMonthly,
+    decimal? PricePremium,
+    List<string>? Languages,
+    int? MaxClients,
+    string? ProfileImageUrl,
+    string? IntroVideoUrl,
+    bool? IsCompleted,
+    string? PhoneNumber,
+    string? City,
+    string? Gender,
+    List<string>? GalleryImages,
+    List<string>? PdfUrls,
+    List<string>? CertificateFiles,
+    List<string>? TransformationImages);

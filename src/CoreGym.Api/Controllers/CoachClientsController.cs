@@ -107,4 +107,22 @@ public class CoachClientsController : ControllerBase
         var sessions = await query.OrderByDescending(s => s.SessionDate).Take(100).ToListAsync(cancellationToken);
         return Ok(sessions);
     }
+
+    [HttpGet("personal-records")]
+    public async Task<IActionResult> GetPersonalRecords(Guid clientUserId, [FromQuery] int limit = 100, CancellationToken cancellationToken = default)
+    {
+        if (!await CanAccessAsync(clientUserId, cancellationToken))
+        {
+            return Forbid();
+        }
+
+        limit = Math.Clamp(limit, 1, 500);
+        var records = await _db.PersonalRecords
+            .AsNoTracking()
+            .Where(r => r.UserId == clientUserId)
+            .OrderBy(r => r.ExerciseName)
+            .Take(limit)
+            .ToListAsync(cancellationToken);
+        return Ok(records);
+    }
 }

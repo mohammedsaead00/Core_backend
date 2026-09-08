@@ -1,16 +1,20 @@
 using CoreGym.Domain.Entities;
 using CoreGym.Domain.Services;
+using CoreGym.Infrastructure.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CoreGym.Infrastructure.Services;
 
 public class SubscriptionLifecycleService : ISubscriptionLifecycleService
 {
     private readonly CoreGymDbContext _db;
+    private readonly IMemoryCache _cache;
 
-    public SubscriptionLifecycleService(CoreGymDbContext db)
+    public SubscriptionLifecycleService(CoreGymDbContext db, IMemoryCache? cache = null)
     {
         _db = db;
+        _cache = cache ?? new MemoryCache(new MemoryCacheOptions());
     }
 
     public async Task ProcessSubscriptionStatusAsync(Guid subscriptionId, string newStatus, CancellationToken cancellationToken = default)
@@ -34,6 +38,9 @@ public class SubscriptionLifecycleService : ISubscriptionLifecycleService
         }
 
         subscription.Status = normalized;
+
+        // Evict the authorization cache so coach access changes take effect immediately.
+        _cache.Remove(ClientAccessService.CacheKey(subscription.Coach!.UserId, subscription.ClientId));
 
         if (normalized == "active")
         {

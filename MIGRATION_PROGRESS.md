@@ -248,3 +248,11 @@ Legend: `[x]` done (schema + EF config + migration + tests) · `[~]` in progress
 - **NEW contradiction found IN PROD (needs owner decision):** `subscription_plans.coach_id` has an FK → `coaches(id)` but its RLS compares `coach_id = auth.uid()` (a user id). The port follows the RLS (FK → profiles); resolve via the join-count query in REVIEW_CHECKLIST, then flip if needed.
 - Deliberate stricter deviations kept: user_id columns NOT NULL (prod allows NULL user_id on several tables) and created_at/updated_at nullable.
 - Tests: **127/127 passed**; `verify.ps1` **23/23 passed** (its own payload was even rejected once by the new onboarding activity_level CHECK — live proof the constraints work).
+
+### 2026-09-07 — Session 3 (continued) — API COVERAGE COMPLETE
+- **Views exposed:** `GET /api/me/personal-records | weekly-progress | weight-progress` + policy-guarded `GET /api/coach/clients/{id}/personal-records`.
+- **User-side writes:** daily-activity (GET/POST/PUT, no delete per prod RLS), weekly-activity (upsert per week+day), exercise-progress (GET/POST), user-programs (full CRUD + muscle-group validation matching the prod CHECK), barcode-scan history (POST/GET, nullable barcode).
+- **Coach-side:** dashboard client list (active subs ⋈ profiles), coach content CRUD (409 on delete of assigned content; client sees public + assigned items), assignments (both sides), subscription phases (coach CRUD / client read), coach onboarding upsert, non-Stripe subscription creation (pending) + `PATCH /status` delegating to `ISubscriptionLifecycleService`.
+- **Auth-path hardening:** `IClientAccessService` results cached 60 s in `IMemoryCache`; `SubscriptionLifecycleService` evicts on every transition so coach access changes are immediate (verified by the updated gating test which now revokes via `PATCH /status` instead of a direct DB write).
+- EF note for future queries: filters/ordering must run on the entity query BEFORE a projection containing correlated subqueries or computed record properties — EF 10 cannot translate `Where`/`OrderBy` applied after such a projection.
+- Tests: **140/140 passed** (13 new e2e); `verify.ps1` **22/22**.

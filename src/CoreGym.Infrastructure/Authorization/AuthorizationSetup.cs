@@ -16,6 +16,7 @@ public static class AuthorizationSetup
     public static IServiceCollection AddCoreGymAuthorization(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
+        services.AddMemoryCache();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IClientAccessService, ClientAccessService>();
         services.AddScoped<IAuthorizationHandler, OwnDataOrActiveCoachHandler>();

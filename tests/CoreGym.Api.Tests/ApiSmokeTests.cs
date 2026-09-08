@@ -161,15 +161,22 @@ public class ApiSmokeTests
         var forbidden = await strangerClient.GetAsync($"/api/coach/clients/{clientId}/summary/2026-01-01");
         Assert.Equal(HttpStatusCode.Forbidden, forbidden.StatusCode);
 
-        // Subscription lapses: the same coach is now forbidden.
+        // Subscription lapses via the lifecycle endpoint: the authorization
+        // cache is evicted, so access changes immediately.
+        Guid subscriptionId;
         await using (var ctx = _fx.CreateContext())
         {
-            var subscription = await ctx.Subscriptions.SingleAsync(s => s.ClientId == clientId);
-            subscription.Status = "cancelled";
-            await ctx.SaveChangesAsync();
+            subscriptionId = await ctx.Subscriptions
+                .Where(s => s.ClientId == clientId)
+                .Select(s => s.Id)
+                .SingleAsync();
         }
 
-        var afterCancel = await coachClient.GetAsync($"/api/coach/clients/{clientId}/summary/2026-01-01");
+        var patch = await coachClient.PatchAsJsonAsync($"/api/coach/subscriptions/{subscriptionId}/status", new { status = "cancelled" });
+        Assert.Equal(HttpStatusCode.OK, patch.StatusCode);
+
+        var afterCancel = await coachClient.GetAsync("/api/coach/clients/{clientId}/summary/2026-01-01"
+            .Replace("{clientId}", clientId.ToString()));
         Assert.Equal(HttpStatusCode.Forbidden, afterCancel.StatusCode);
     }
 
