@@ -8,7 +8,11 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
 {
     public void Configure(EntityTypeBuilder<Review> builder)
     {
-        builder.ToTable("reviews");
+        builder.ToTable("reviews", t =>
+        {
+            // CHECK value from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_reviews_rating", "[rating] >= 1 AND [rating] <= 5");
+        });
         builder.HasKey(r => r.Id).HasName("PK_reviews");
 
         builder.Property(r => r.Id).HasColumnName("id");

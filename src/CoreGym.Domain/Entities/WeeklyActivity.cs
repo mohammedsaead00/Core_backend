@@ -11,9 +11,10 @@ public class WeeklyActivity
 
     public int DayIndex { get; set; }
 
-    public decimal? ActualPct { get; set; }
+    /// <summary>Live prod dump: percentages are integers (0-100).</summary>
+    public int? ActualPct { get; set; }
 
-    public decimal GoalPct { get; set; }
+    public int? GoalPct { get; set; }
 
     public Profile? User { get; set; }
 }

@@ -13,9 +13,10 @@ public class DailyActivity
 
     public decimal ActiveCaloriesBurned { get; set; }
 
-    public int? HeartRateAvg { get; set; }
+    /// <summary>Live prod dump: numeric, not integer.</summary>
+    public decimal? HeartRateAvg { get; set; }
 
-    public int? ExerciseMinutes { get; set; }
+    public decimal? ExerciseMinutes { get; set; }
 
     public string? Source { get; set; }
 

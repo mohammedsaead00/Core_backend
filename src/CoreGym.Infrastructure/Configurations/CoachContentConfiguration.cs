@@ -8,7 +8,12 @@ public class CoachContentConfiguration : IEntityTypeConfiguration<CoachContent>
 {
     public void Configure(EntityTypeBuilder<CoachContent> builder)
     {
-        builder.ToTable("coach_content");
+        builder.ToTable("coach_content", t =>
+        {
+            // CHECK value from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_coach_content_type",
+                "[type] IN (N'pdf', N'video', N'image')");
+        });
         builder.HasKey(cc => cc.Id).HasName("PK_coach_content");
 
         builder.Property(cc => cc.Id).HasColumnName("id");

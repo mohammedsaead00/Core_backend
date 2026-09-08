@@ -8,7 +8,12 @@ public class WorkoutSessionConfiguration : IEntityTypeConfiguration<WorkoutSessi
 {
     public void Configure(EntityTypeBuilder<WorkoutSession> builder)
     {
-        builder.ToTable("workout_sessions");
+        builder.ToTable("workout_sessions", t =>
+        {
+            // CHECK value from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_workout_sessions_muscle_group",
+                "[muscle_group] IN (N'chest', N'arms', N'legs', N'core', N'back', N'shoulders', N'full_body')");
+        });
         builder.HasKey(s => s.Id).HasName("PK_workout_sessions");
 
         builder.Property(s => s.Id).HasColumnName("id");
@@ -17,8 +22,8 @@ public class WorkoutSessionConfiguration : IEntityTypeConfiguration<WorkoutSessi
         builder.Property(s => s.SessionName).HasColumnName("session_name").HasMaxLength(200);
         builder.Property(s => s.DurationMin).HasColumnName("duration_min").HasDefaultValue(0);
         builder.Property(s => s.Notes).HasColumnName("notes");
-        builder.Property(s => s.SessionDate).HasColumnName("session_date").HasColumnType("date").HasDefaultValueSql("(CAST(SYSUTCDATETIME() AS date))");
-        builder.Property(s => s.StartedAt).HasColumnName("started_at");
+        builder.Property(s => s.SessionDate).HasColumnName("session_date").IsRequired().HasColumnType("date").HasDefaultValueSql("(CAST(SYSUTCDATETIME() AS date))");
+        builder.Property(s => s.StartedAt).HasColumnName("started_at").IsRequired().HasDefaultValueSql("(SYSDATETIMEOFFSET())");
         builder.Property(s => s.EndedAt).HasColumnName("ended_at");
 
         builder.HasOne(s => s.User)

@@ -60,9 +60,9 @@ public class ViewTests
         var weekStart = new DateTime(2026, 8, 31, 0, 0, 0, DateTimeKind.Utc);
 
         _fx.Context.WeeklyActivities.AddRange(
-            new WeeklyActivity { Id = Guid.NewGuid(), UserId = userId, WeekStart = weekStart, DayIndex = 0, ActualPct = 100m, GoalPct = 100m },
-            new WeeklyActivity { Id = Guid.NewGuid(), UserId = userId, WeekStart = weekStart, DayIndex = 1, ActualPct = 50m, GoalPct = 100m },
-            new WeeklyActivity { Id = Guid.NewGuid(), UserId = userId, WeekStart = weekStart, DayIndex = 2, ActualPct = 80m, GoalPct = 80m });
+            new WeeklyActivity { Id = Guid.NewGuid(), UserId = userId, WeekStart = weekStart, DayIndex = 0, ActualPct = 100, GoalPct = 100 },
+            new WeeklyActivity { Id = Guid.NewGuid(), UserId = userId, WeekStart = weekStart, DayIndex = 1, ActualPct = 50, GoalPct = 100 },
+            new WeeklyActivity { Id = Guid.NewGuid(), UserId = userId, WeekStart = weekStart, DayIndex = 2, ActualPct = 80, GoalPct = 80 });
         await _fx.Context.SaveChangesAsync();
 
         await using var ctx = _fx.CreateContext();

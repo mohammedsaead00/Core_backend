@@ -12,6 +12,11 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         {
             t.HasCheckConstraint("CK_exercises_secondary_muscles_json",
                 "[secondary_muscles] IS NULL OR ISJSON([secondary_muscles]) = 1");
+            // CHECK values from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_exercises_muscle_group",
+                "[muscle_group] IS NULL OR [muscle_group] IN (N'chest', N'back', N'shoulders', N'arms', N'legs', N'core', N'full_body', N'cardio')");
+            t.HasCheckConstraint("CK_exercises_category",
+                "[category] IS NULL OR [category] IN (N'compound', N'isolation', N'cardio', N'stretching')");
         });
         builder.HasKey(e => e.Id).HasName("PK_exercises");
 

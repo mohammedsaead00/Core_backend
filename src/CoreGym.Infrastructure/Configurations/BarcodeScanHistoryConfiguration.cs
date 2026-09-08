@@ -13,10 +13,12 @@ public class BarcodeScanHistoryConfiguration : IEntityTypeConfiguration<BarcodeS
 
         builder.Property(h => h.Id).HasColumnName("id");
         builder.Property(h => h.UserId).HasColumnName("user_id");
-        builder.Property(h => h.Barcode).HasColumnName("barcode").IsRequired().HasMaxLength(50);
+        // Live prod dump: barcode is NULLABLE with no FK — a scan can be recorded
+        // before/without the product being cached.
+        builder.Property(h => h.Barcode).HasColumnName("barcode").HasMaxLength(50);
         builder.Property(h => h.QuantityG).HasColumnName("quantity_g").HasColumnType("decimal(8,2)");
         builder.Property(h => h.NutritionLogId).HasColumnName("nutrition_log_id");
-        builder.Property(h => h.ScannedAt).HasColumnName("scanned_at");
+        builder.Property(h => h.ScannedAt).HasColumnName("scanned_at").IsRequired().HasDefaultValueSql("(SYSDATETIMEOFFSET())");
 
         builder.HasOne(h => h.User)
             .WithMany()
@@ -24,11 +26,7 @@ public class BarcodeScanHistoryConfiguration : IEntityTypeConfiguration<BarcodeS
             .HasConstraintName("FK_barcode_scan_history_profiles")
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(h => h.Product)
-            .WithMany()
-            .HasForeignKey(h => h.Barcode)
-            .HasConstraintName("FK_barcode_scan_history_barcode_products")
-            .OnDelete(DeleteBehavior.Restrict);
+        // NOTE: no FK on barcode in the original — removed from the port for fidelity.
 
         builder.HasOne(h => h.NutritionLog)
             .WithMany()

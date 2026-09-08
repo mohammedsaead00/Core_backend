@@ -8,7 +8,12 @@ public class NutritionLogConfiguration : IEntityTypeConfiguration<NutritionLog>
 {
     public void Configure(EntityTypeBuilder<NutritionLog> builder)
     {
-        builder.ToTable("nutrition_logs");
+        builder.ToTable("nutrition_logs", t =>
+        {
+            // CHECK value from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_nutrition_logs_meal_type",
+                "[meal_type] IS NULL OR [meal_type] IN (N'breakfast', N'lunch', N'dinner', N'snack')");
+        });
         builder.HasKey(n => n.Id).HasName("PK_nutrition_logs");
 
         builder.Property(n => n.Id).HasColumnName("id");
@@ -24,7 +29,7 @@ public class NutritionLogConfiguration : IEntityTypeConfiguration<NutritionLog>
         builder.Property(n => n.ProteinG).HasColumnName("protein_g").HasColumnType("decimal(8,2)").HasDefaultValue(0m);
         builder.Property(n => n.CarbsG).HasColumnName("carbs_g").HasColumnType("decimal(8,2)").HasDefaultValue(0m);
         builder.Property(n => n.FatG).HasColumnName("fat_g").HasColumnType("decimal(8,2)").HasDefaultValue(0m);
-        builder.Property(n => n.LoggedDate).HasColumnName("logged_date").HasColumnType("date").HasDefaultValueSql("(CAST(SYSUTCDATETIME() AS date))");
+        builder.Property(n => n.LoggedDate).HasColumnName("logged_date").IsRequired().HasColumnType("date").HasDefaultValueSql("(CAST(SYSUTCDATETIME() AS date))");
         builder.Property(n => n.LoggedAt).HasColumnName("logged_at").HasDefaultValueSql("(SYSDATETIMEOFFSET())");
 
         builder.HasOne(n => n.User)

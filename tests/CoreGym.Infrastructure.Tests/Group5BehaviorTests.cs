@@ -122,14 +122,15 @@ public class Group5BehaviorTests
         {
             Id = Guid.NewGuid(),
             UserId = clientId,
-            Type = "chat_message",
+            // CHECK-constrained values from the live prod dump: 'message' | 'plan'.
+            Type = "message",
             Title = "New message",
             Body = "You have a new message",
             ConversationId = conversationId,
             PlanId = plan.Id,
-            // Deliberately no FK: an arbitrary guid must be accepted until the
-            // coach_id key space is confirmed (open question 12).
-            CoachId = Guid.NewGuid(),
+            // RESOLVED (open question 12): coach_id references profiles(id) with an FK,
+            // so it must be a real user id — the client's own id works.
+            CoachId = clientId,
         };
         _fx.Context.Notifications.Add(notification);
         await _fx.Context.SaveChangesAsync();
@@ -137,12 +138,10 @@ public class Group5BehaviorTests
         await using var ctx = _fx.CreateContext();
         var loaded = await ctx.Notifications
             .Include(n => n.Conversation)
-            .Include(n => n.Plan)
             .AsNoTracking()
             .SingleAsync(n => n.Id == notification.Id);
 
         Assert.NotNull(loaded.Conversation);
-        Assert.Equal("Gold", loaded.Plan!.Name);
         Assert.False(loaded.IsRead);
         Assert.NotNull(loaded.CreatedAt);
     }

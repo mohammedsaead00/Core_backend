@@ -8,15 +8,22 @@ public class WeeklyActivityConfiguration : IEntityTypeConfiguration<WeeklyActivi
 {
     public void Configure(EntityTypeBuilder<WeeklyActivity> builder)
     {
-        builder.ToTable("weekly_activity");
+        builder.ToTable("weekly_activity", t =>
+        {
+            // CHECK values from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_weekly_activity_day_index", "[day_index] >= 0 AND [day_index] <= 6");
+            t.HasCheckConstraint("CK_weekly_activity_actual_pct", "[actual_pct] IS NULL OR ([actual_pct] >= 0 AND [actual_pct] <= 100)");
+            t.HasCheckConstraint("CK_weekly_activity_goal_pct", "[goal_pct] IS NULL OR ([goal_pct] >= 0 AND [goal_pct] <= 100)");
+        });
         builder.HasKey(w => w.Id).HasName("PK_weekly_activity");
 
         builder.Property(w => w.Id).HasColumnName("id");
         builder.Property(w => w.UserId).HasColumnName("user_id");
         builder.Property(w => w.WeekStart).HasColumnName("week_start").HasColumnType("date");
         builder.Property(w => w.DayIndex).HasColumnName("day_index");
-        builder.Property(w => w.ActualPct).HasColumnName("actual_pct").HasColumnType("decimal(5,2)");
-        builder.Property(w => w.GoalPct).HasColumnName("goal_pct").HasColumnType("decimal(5,2)").HasDefaultValue(0m);
+        // Live prod dump: percentages are INT (0-100), not decimal.
+        builder.Property(w => w.ActualPct).HasColumnName("actual_pct").HasDefaultValue(0);
+        builder.Property(w => w.GoalPct).HasColumnName("goal_pct").HasDefaultValue(0);
 
         builder.HasOne(w => w.User)
             .WithMany()

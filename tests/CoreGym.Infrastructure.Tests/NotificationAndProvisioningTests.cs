@@ -92,7 +92,8 @@ public class NotificationAndProvisioningTests
         {
             Id = Guid.NewGuid(),
             UserId = userId,
-            Type = "test",
+            // notifications.type is CHECK-constrained ('message' | 'plan').
+            Type = "message",
             Title = "t",
             Body = "b",
             IsRead = alreadyRead,

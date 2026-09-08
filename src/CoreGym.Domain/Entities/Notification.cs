@@ -18,12 +18,12 @@ public class Notification
 
     public Guid? ConversationId { get; set; }
 
+    /// <summary>No FK in the original schema; references subscription_plans.id by convention only.</summary>
     public Guid? PlanId { get; set; }
 
     /// <summary>
-    /// Soft reference, deliberately NO foreign key: the original never reveals
-    /// whether this holds a user id or a coaches.id (chat flow suggests user
-    /// id). Confirm during the chat-phase port, then add the FK.
+    /// RESOLVED via the live prod schema dump (2026-09-07): references
+    /// profiles.id (a user id) and carries a foreign key.
     /// </summary>
     public Guid? CoachId { get; set; }
 
@@ -35,5 +35,6 @@ public class Notification
 
     public Conversation? Conversation { get; set; }
 
-    public SubscriptionPlan? Plan { get; set; }
+    /// <summary>The coach user (coach_id = profiles.id per the prod dump).</summary>
+    public Profile? Coach { get; set; }
 }

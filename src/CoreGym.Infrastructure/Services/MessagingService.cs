@@ -74,7 +74,9 @@ public class MessagingService : IMessagingService
         {
             Id = Guid.NewGuid(),
             UserId = recipientId,
-            Type = "chat_message",
+            // notifications.type is CHECK-constrained to 'message' | 'plan'
+            // (value taken from the live prod schema dump).
+            Type = "message",
             Title = string.IsNullOrWhiteSpace(senderName) ? "New message" : senderName,
             Body = preview,
             ConversationId = conversationId,
@@ -93,7 +95,7 @@ public class MessagingService : IMessagingService
                 new Dictionary<string, string>
                 {
                     ["conversationId"] = conversationId.ToString(),
-                    ["type"] = "chat_message",
+                    ["type"] = "message",
                 },
                 cancellationToken);
         }

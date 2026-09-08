@@ -8,7 +8,12 @@ public class VoiceFoodLogConfiguration : IEntityTypeConfiguration<VoiceFoodLog>
 {
     public void Configure(EntityTypeBuilder<VoiceFoodLog> builder)
     {
-        builder.ToTable("voice_food_logs");
+        builder.ToTable("voice_food_logs", t =>
+        {
+            // CHECK value from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_voice_food_logs_confidence",
+                "[confidence] IS NULL OR [confidence] IN (N'low', N'medium', N'high')");
+        });
         builder.HasKey(l => l.Id).HasName("PK_voice_food_logs");
 
         builder.Property(l => l.Id).HasColumnName("id");
@@ -18,7 +23,7 @@ public class VoiceFoodLogConfiguration : IEntityTypeConfiguration<VoiceFoodLog>
         builder.Property(l => l.IsFood).HasColumnName("is_food").HasDefaultValueSql("((1))");
         builder.Property(l => l.Confidence).HasColumnName("confidence").HasMaxLength(50).HasDefaultValueSql("(N'medium')");
         builder.Property(l => l.Notes).HasColumnName("notes");
-        builder.Property(l => l.LoggedAt).HasColumnName("logged_at");
+        builder.Property(l => l.LoggedAt).HasColumnName("logged_at").IsRequired().HasDefaultValueSql("(SYSDATETIMEOFFSET())");
         builder.Property(l => l.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("(SYSDATETIMEOFFSET())");
 
         builder.HasOne(l => l.User)

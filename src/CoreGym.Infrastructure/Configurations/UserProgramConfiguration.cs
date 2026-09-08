@@ -8,7 +8,12 @@ public class UserProgramConfiguration : IEntityTypeConfiguration<UserProgram>
 {
     public void Configure(EntityTypeBuilder<UserProgram> builder)
     {
-        builder.ToTable("user_programs");
+        builder.ToTable("user_programs", t =>
+        {
+            // CHECK values from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_user_programs_muscle_group",
+                "[muscle_group] IN (N'chest', N'arms', N'legs', N'core')");
+        });
         builder.HasKey(p => p.Id).HasName("PK_user_programs");
 
         builder.Property(p => p.Id).HasColumnName("id");

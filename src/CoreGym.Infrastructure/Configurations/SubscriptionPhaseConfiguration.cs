@@ -8,7 +8,14 @@ public class SubscriptionPhaseConfiguration : IEntityTypeConfiguration<Subscript
 {
     public void Configure(EntityTypeBuilder<SubscriptionPhase> builder)
     {
-        builder.ToTable("subscription_phases");
+        builder.ToTable("subscription_phases", t =>
+        {
+            // CHECK values from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_subscription_phases_type",
+                "[type] IS NULL OR [type] IN (N'workout', N'nutrition', N'combined')");
+            t.HasCheckConstraint("CK_subscription_phases_status",
+                "[status] IS NULL OR [status] IN (N'upcoming', N'in_progress', N'completed')");
+        });
         builder.HasKey(ph => ph.Id).HasName("PK_subscription_phases");
 
         builder.Property(ph => ph.Id).HasColumnName("id");

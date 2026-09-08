@@ -180,7 +180,7 @@ try {
         $r = Invoke-Api "PUT" "/api/me" @{ name = "Verified User"; age = 28; weightKg = 80.5 } $token
         Add-Check "Profile update (PUT /api/me -> 200)" ($r.Status -eq 200) "status $($r.Status)"
 
-        $r = Invoke-Api "PUT" "/api/me/onboarding" @{ age = 28; gender = "male"; goal = "muscle_gain"; activityLevel = "moderate"; completed = $true } $token
+        $r = Invoke-Api "PUT" "/api/me/onboarding" @{ age = 28; gender = "male"; goal = "muscle_gain"; activityLevel = "moderately_active"; completed = $true } $token
         Add-Check "Onboarding upsert (PUT /api/me/onboarding -> 200)" ($r.Status -eq 200) "status $($r.Status)"
 
         $r = Invoke-Api "PUT" "/api/me/goals" @{ dailyCalories = 2200; dailyProteinG = 160; dailyWaterMl = 3000 } $token
@@ -256,7 +256,7 @@ finally {
 
 # ---------------------------------------------------------------- summary
 Write-Host ""
-$failed = ($script:checks | Where-Object { $_.Result -eq "FAIL" }).Count
+$failed = @($script:checks | Where-Object { $_.Result -eq "FAIL" }).Count
 $script:checks | Format-Table Check, Result, Detail -AutoSize
 if (-not $KeepDb) { Write-Host "Scratch database dropped. API logs: verify-api.out.log / verify-api.err.log" -ForegroundColor DarkGray }
 if ($failed -eq 0) {

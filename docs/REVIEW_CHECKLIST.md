@@ -18,19 +18,38 @@ Open items to confirm before production cutover. Full context and history in
 
 ## Schema assumptions to confirm
 
-- [ ] **FKs & cascade rules** — all 58 FKs are inferred from column names and set to
-      `ON DELETE NO ACTION`. Confirm whether the original has FKs at all, and whether any
-      should cascade (most plausible: `food_scan_items` → `food_scans`,
-      `voice_food_log_items` → `voice_food_logs`).
-- [ ] **Unique constraints beyond PKs** — candidates: `daily_summary (user_id, summary_date)`,
-      `user_active_program (user_id)`, `user_goals (user_id)`, `coaches (user_id)`,
-      `stripe_customers (stripe_customer_id)`.
-- [ ] **`notifications.coach_id` key space** — user id or `coaches.id`? Currently a soft
-      reference with no FK. Confirm during the chat-phase port, then add the FK.
+- [x] **Unique constraints beyond PKs** — RESOLVED 2026-09-07 from the live prod schema dump:
+      `onboarding.user_id`, `user_goals.user_id`, `user_active_program.user_id`, `coaches.user_id`,
+      `stripe_customers.user_id` and `stripe_customers.stripe_customer_id` are all UNIQUE — now
+      enforced in the port (migration `AlignWithProdSchema`).
+- [x] **`notifications.coach_id` key space** — RESOLVED 2026-09-07: the prod dump shows it references
+      `profiles(id)` (a user id) **with a foreign key** — FK added.
+- [ ] **`subscription_plans.coach_id` CONTRADICTION in the prod schema** — the FK references
+      `coaches(id)` but the RLS policy compares `coach_id = auth.uid()` (a user id). Both cannot be
+      satisfied by real data unless coaches.id ever equals the user id. The port currently follows
+      the RLS (FK → profiles). Resolve with: `SELECT COUNT(*) FROM subscription_plans sp JOIN
+      coaches c ON sp.coach_id = c.id` vs `JOIN profiles p ON sp.coach_id = p.id` — then either flip
+      the FK to coaches or fix the app query.
 - [ ] **`conversations.subscription_id` nullability** — assumed nullable (chats can start
-      outside an accepted-subscription flow).
+      outside an accepted-subscription flow). The prod dump confirms nullable ✓.
 - [ ] **`payment_intents.amount` units** — Stripe cents or major currency units? Modeled as
       `DECIMAL(12,2)` either way; confirm when porting the webhook function.
+- [x] **CHECK constraint value lists** — taken from the live prod dump (2026-09-07): gender,
+      fitness_goal, onboarding (goal/activity_level/weekly_workouts), meal_type, muscle groups
+      (user_programs/workout_sessions/exercises), exercises.category, training level/goal, mood 1–5,
+      reviews.rating 1–5, subscriptions.tier/payment_status, payment_intents.status,
+      coach_content.type, subscription_phases.type/status, coach_profiles.rating 0–5, confidence
+      columns, weekly_activity day_index/pcts, daily_activity numeric types, `messages.type` (6
+      values incl. `workout_plan`/`nutrition_plan` — the port was wrongly rejecting those),
+      `barcode_products.source` (incl. `manual`), `notifications.type` (`message`|`plan` — the
+      messaging service now writes `message`).
+- [x] **`barcode_scan_history.barcode`** — nullable with NO FK in the prod dump; the port now matches
+      (a scan can exist before the product is cached).
+- [ ] **`profiles.full_name` defaults to the `name` column** in prod (`DEFAULT name`) — SQL Server
+      cannot express a column-reference default; the app/API must set `full_name` explicitly.
+- [x] **`notifications.plan_id`** — no FK in the prod dump; the port's extra FK was removed.
+- [x] **Meal reminder windows** — prod cron fires 06:00/12:00/18:00 UTC (08:00/14:00/20:00 Cairo) ✓
+      matches the ported scheduler; quiet hours evaluated in Cairo local time.
 
 ## Environment checks
 

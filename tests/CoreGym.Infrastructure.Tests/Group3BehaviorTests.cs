@@ -89,7 +89,7 @@ public class Group3BehaviorTests
         Assert.Equal(0m, loaded.ActiveCaloriesBurned);
         Assert.Equal("health_connect", loaded.Source);
         Assert.Equal(DateTime.UtcNow.Date, loaded.ActivityDate!.Value);
-        Assert.Null(loaded.SyncedAt);
+        Assert.NotNull(loaded.SyncedAt); // NOT NULL + default in the live prod schema
     }
 
     [Fact]
@@ -354,7 +354,7 @@ public class Group3BehaviorTests
             UserId = userId,
             WeekStart = DateTime.UtcNow.Date,
             DayIndex = 3,
-            ActualPct = 87.5m,
+            ActualPct = 87,
         });
         await _fx.Context.SaveChangesAsync();
 
@@ -362,8 +362,8 @@ public class Group3BehaviorTests
         var loaded = await ctx.WeeklyActivities.AsNoTracking()
             .SingleAsync(w => w.UserId == userId && w.DayIndex == 3);
 
-        Assert.Equal(0m, loaded.GoalPct);
-        Assert.Equal(87.5m, loaded.ActualPct);
+        Assert.Equal(0, loaded.GoalPct);
+        Assert.Equal(87, loaded.ActualPct);
         Assert.Equal(DateTime.UtcNow.Date, loaded.WeekStart);
     }
 

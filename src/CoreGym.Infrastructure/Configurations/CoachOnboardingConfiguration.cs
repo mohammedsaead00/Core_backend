@@ -31,16 +31,16 @@ public class CoachOnboardingConfiguration : IEntityTypeConfiguration<CoachOnboar
 
         builder.Property(co => co.Id).HasColumnName("id");
         builder.Property(co => co.UserId).HasColumnName("user_id");
-        builder.Property(co => co.DisplayName).HasColumnName("display_name").HasMaxLength(200);
+        builder.Property(co => co.DisplayName).HasColumnName("display_name").IsRequired().HasMaxLength(200).HasDefaultValueSql("(N'')");
         builder.Property(co => co.YearsExperience).HasColumnName("years_experience").HasDefaultValue(0);
-        builder.Property(co => co.Certifications).HasColumnName("certifications").AsJsonArray();
-        builder.Property(co => co.Specialization).HasColumnName("specialization").AsJsonArray();
-        builder.Property(co => co.Bio).HasColumnName("bio");
-        builder.Property(co => co.PriceMonthly).HasColumnName("price_monthly").HasColumnType("decimal(10,2)");
-        builder.Property(co => co.PricePremium).HasColumnName("price_premium").HasColumnType("decimal(10,2)");
-        builder.Property(co => co.Languages).HasColumnName("languages").AsJsonArray()
+        builder.Property(co => co.Certifications).HasColumnName("certifications").IsRequired().AsJsonArray();
+        builder.Property(co => co.Specialization).HasColumnName("specialization").IsRequired().AsJsonArray();
+        builder.Property(co => co.Bio).HasColumnName("bio").IsRequired().HasDefaultValueSql("(N'')");
+        builder.Property(co => co.PriceMonthly).HasColumnName("price_monthly").IsRequired().HasColumnType("decimal(10,2)").HasDefaultValue(0m);
+        builder.Property(co => co.PricePremium).HasColumnName("price_premium").IsRequired().HasColumnType("decimal(10,2)").HasDefaultValue(0m);
+        builder.Property(co => co.Languages).HasColumnName("languages").IsRequired().AsJsonArray()
             .HasDefaultValueSql("(N'[\"Arabic\",\"English\"]')");
-        builder.Property(co => co.MaxClients).HasColumnName("max_clients").HasDefaultValueSql("((10))");
+        builder.Property(co => co.MaxClients).HasColumnName("max_clients").IsRequired().HasDefaultValueSql("((10))");
         builder.Property(co => co.ProfileImageUrl).HasColumnName("profile_image_url").HasMaxLength(500);
         builder.Property(co => co.IntroVideoUrl).HasColumnName("intro_video_url").HasMaxLength(500);
         builder.Property(co => co.IsCompleted).HasColumnName("is_completed").HasDefaultValue(false);

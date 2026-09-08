@@ -15,6 +15,11 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
             // from the Dart SubscriptionStatus enum and stripe-webhook writes.
             t.HasCheckConstraint("CK_subscriptions_status",
                 "[status] IN (N'pending', N'active', N'cancelled', N'expired')");
+            // CHECK values from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_subscriptions_tier",
+                "[tier] IN (N'basic', N'standard', N'premium')");
+            t.HasCheckConstraint("CK_subscriptions_payment_status",
+                "[payment_status] IS NULL OR [payment_status] IN (N'unpaid', N'paid', N'refunded')");
             t.HasTrigger("trg_subscriptions_updated_at");
         });
         builder.HasKey(s => s.Id).HasName("PK_subscriptions");
@@ -23,8 +28,8 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
         builder.Property(s => s.ClientId).HasColumnName("client_id");
         builder.Property(s => s.CoachId).HasColumnName("coach_id");
         builder.Property(s => s.Status).HasColumnName("status").IsRequired().HasMaxLength(20).HasDefaultValueSql("(N'active')");
-        builder.Property(s => s.Tier).HasColumnName("tier").HasMaxLength(50).HasDefaultValueSql("(N'basic')");
-        builder.Property(s => s.StartDate).HasColumnName("start_date").HasColumnType("date").HasDefaultValueSql("(CAST(SYSUTCDATETIME() AS date))");
+        builder.Property(s => s.Tier).HasColumnName("tier").IsRequired().HasMaxLength(50).HasDefaultValueSql("(N'basic')");
+        builder.Property(s => s.StartDate).HasColumnName("start_date").IsRequired().HasColumnType("date").HasDefaultValueSql("(CAST(SYSUTCDATETIME() AS date))");
         builder.Property(s => s.EndDate).HasColumnName("end_date").HasColumnType("date");
         builder.Property(s => s.StripeSubId).HasColumnName("stripe_sub_id").HasMaxLength(100);
         builder.Property(s => s.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("(SYSDATETIMEOFFSET())");

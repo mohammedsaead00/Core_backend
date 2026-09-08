@@ -16,7 +16,7 @@ public class ClientAssignmentConfiguration : IEntityTypeConfiguration<ClientAssi
         builder.Property(ca => ca.ClientId).HasColumnName("client_id");
         builder.Property(ca => ca.ContentId).HasColumnName("content_id");
         builder.Property(ca => ca.Note).HasColumnName("note");
-        builder.Property(ca => ca.AssignedAt).HasColumnName("assigned_at");
+        builder.Property(ca => ca.AssignedAt).HasColumnName("assigned_at").IsRequired().HasDefaultValueSql("(SYSDATETIMEOFFSET())");
 
         builder.HasOne(ca => ca.Coach)
             .WithMany()

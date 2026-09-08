@@ -13,13 +13,14 @@ public class DailyActivityConfiguration : IEntityTypeConfiguration<DailyActivity
 
         builder.Property(a => a.Id).HasColumnName("id");
         builder.Property(a => a.UserId).HasColumnName("user_id");
-        builder.Property(a => a.ActivityDate).HasColumnName("activity_date").HasColumnType("date").HasDefaultValueSql("(CAST(SYSUTCDATETIME() AS date))");
+        builder.Property(a => a.ActivityDate).HasColumnName("activity_date").IsRequired().HasColumnType("date").HasDefaultValueSql("(CAST(SYSUTCDATETIME() AS date))");
         builder.Property(a => a.Steps).HasColumnName("steps").HasDefaultValue(0);
         builder.Property(a => a.ActiveCaloriesBurned).HasColumnName("active_calories_burned").HasColumnType("decimal(8,2)").HasDefaultValue(0m);
-        builder.Property(a => a.HeartRateAvg).HasColumnName("heart_rate_avg");
-        builder.Property(a => a.ExerciseMinutes).HasColumnName("exercise_minutes");
+        // Live prod dump: heart rate and exercise minutes are numeric, not int.
+        builder.Property(a => a.HeartRateAvg).HasColumnName("heart_rate_avg").HasColumnType("decimal(6,2)");
+        builder.Property(a => a.ExerciseMinutes).HasColumnName("exercise_minutes").HasColumnType("decimal(6,2)");
         builder.Property(a => a.Source).HasColumnName("source").HasMaxLength(50).HasDefaultValueSql("(N'health_connect')");
-        builder.Property(a => a.SyncedAt).HasColumnName("synced_at");
+        builder.Property(a => a.SyncedAt).HasColumnName("synced_at").IsRequired().HasDefaultValueSql("(SYSDATETIMEOFFSET())");
         builder.Property(a => a.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("(SYSDATETIMEOFFSET())");
 
         builder.HasOne(a => a.User)

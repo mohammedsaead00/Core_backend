@@ -8,7 +8,12 @@ public class PaymentIntentConfiguration : IEntityTypeConfiguration<PaymentIntent
 {
     public void Configure(EntityTypeBuilder<PaymentIntent> builder)
     {
-        builder.ToTable("payment_intents");
+        builder.ToTable("payment_intents", t =>
+        {
+            // CHECK value from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_payment_intents_status",
+                "[status] IN (N'pending', N'succeeded', N'failed', N'refunded')");
+        });
         builder.HasKey(pi => pi.Id).HasName("PK_payment_intents");
 
         builder.Property(pi => pi.Id).HasColumnName("id");
@@ -17,9 +22,9 @@ public class PaymentIntentConfiguration : IEntityTypeConfiguration<PaymentIntent
         builder.Property(pi => pi.StripePaymentId).HasColumnName("stripe_payment_id").IsRequired().HasMaxLength(100);
         builder.Property(pi => pi.StripeCustomerId).HasColumnName("stripe_customer_id").HasMaxLength(100);
         builder.Property(pi => pi.Amount).HasColumnName("amount").HasColumnType("decimal(12,2)");
-        builder.Property(pi => pi.Currency).HasColumnName("currency").HasMaxLength(10).HasDefaultValueSql("(N'usd')");
-        builder.Property(pi => pi.Status).HasColumnName("status").HasMaxLength(50).HasDefaultValueSql("(N'pending')");
-        builder.Property(pi => pi.Tier).HasColumnName("tier").HasMaxLength(50).HasDefaultValueSql("(N'standard')");
+        builder.Property(pi => pi.Currency).HasColumnName("currency").IsRequired().HasMaxLength(10).HasDefaultValueSql("(N'usd')");
+        builder.Property(pi => pi.Status).HasColumnName("status").IsRequired().HasMaxLength(50).HasDefaultValueSql("(N'pending')");
+        builder.Property(pi => pi.Tier).HasColumnName("tier").IsRequired().HasMaxLength(50).HasDefaultValueSql("(N'standard')");
         builder.Property(pi => pi.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("(SYSDATETIMEOFFSET())");
 
         builder.HasOne(pi => pi.Client)

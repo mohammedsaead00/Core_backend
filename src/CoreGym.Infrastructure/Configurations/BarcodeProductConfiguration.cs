@@ -11,9 +11,11 @@ public class BarcodeProductConfiguration : IEntityTypeConfiguration<BarcodeProdu
         // Declares the updated_at trigger so EF avoids the OUTPUT clause on SaveChanges.
         builder.ToTable("barcode_products", t =>
         {
-            // Documented allowed values from the inventory.
+            // Values from the live prod schema dump (2026-09-07): 'manual' was missing from the port.
             t.HasCheckConstraint("CK_barcode_products_source",
-                "[source] IN (N'openfoodfacts', N'gemini_estimate')");
+                "[source] IN (N'openfoodfacts', N'gemini_estimate', N'manual')");
+            t.HasCheckConstraint("CK_barcode_products_confidence",
+                "[confidence] IS NULL OR [confidence] IN (N'low', N'medium', N'high')");
             t.HasTrigger("trg_barcode_products_updated_at");
         });
         builder.HasKey(b => b.Barcode).HasName("PK_barcode_products");
@@ -28,7 +30,7 @@ public class BarcodeProductConfiguration : IEntityTypeConfiguration<BarcodeProdu
         builder.Property(b => b.CarbsG).HasColumnName("carbs_g").HasColumnType("decimal(8,2)").HasDefaultValue(0m);
         builder.Property(b => b.FatG).HasColumnName("fat_g").HasColumnType("decimal(8,2)").HasDefaultValue(0m);
         builder.Property(b => b.Source).HasColumnName("source").IsRequired().HasMaxLength(50);
-        builder.Property(b => b.Confidence).HasColumnName("confidence").HasMaxLength(50).HasDefaultValueSql("(N'high')");
+        builder.Property(b => b.Confidence).HasColumnName("confidence").IsRequired().HasMaxLength(50).HasDefaultValueSql("(N'high')");
         builder.Property(b => b.LookupCount).HasColumnName("lookup_count").HasDefaultValueSql("((1))");
         builder.Property(b => b.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("(SYSDATETIMEOFFSET())");
         builder.Property(b => b.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("(SYSDATETIMEOFFSET())");

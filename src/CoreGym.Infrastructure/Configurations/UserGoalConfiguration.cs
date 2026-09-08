@@ -35,6 +35,6 @@ public class UserGoalConfiguration : IEntityTypeConfiguration<UserGoal>
             .HasConstraintName("FK_user_goals_profiles")
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(g => g.UserId).HasDatabaseName("IX_user_goals_user_id");
+        builder.HasIndex(g => g.UserId).IsUnique().HasDatabaseName("IX_user_goals_user_id");
     }
 }

@@ -16,6 +16,9 @@ public class CoachProfileConfiguration : IEntityTypeConfiguration<CoachProfile>
             t.HasCheckConstraint("CK_coach_profiles_certifications_json",
                 "[certifications] IS NULL OR ISJSON([certifications]) = 1");
             t.HasTrigger("trg_coach_profiles_updated_at");
+            // CHECK value from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_coach_profiles_rating",
+                "[rating] IS NULL OR ([rating] >= 0 AND [rating] <= 5)");
         });
         builder.HasKey(cp => cp.Id).HasName("PK_coach_profiles");
 

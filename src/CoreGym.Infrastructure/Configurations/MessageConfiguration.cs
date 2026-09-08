@@ -10,10 +10,10 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
     {
         builder.ToTable("messages", t =>
         {
-            // Documented allowed values from the inventory (consolidates the
-            // duplicated conversation/message RLS era of the original schema).
+            // CHECK values taken from the live prod schema dump (2026-09-07):
+            // the original also allows plan messages, which the 4-value port was rejecting.
             t.HasCheckConstraint("CK_messages_type",
-                "[type] IN (N'text', N'voice', N'image', N'file')");
+                "[type] IN (N'text', N'image', N'file', N'workout_plan', N'nutrition_plan', N'voice')");
         });
         builder.HasKey(m => m.Id).HasName("PK_messages");
 

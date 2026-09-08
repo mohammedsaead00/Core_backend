@@ -8,7 +8,14 @@ public class TrainingProgramConfiguration : IEntityTypeConfiguration<TrainingPro
 {
     public void Configure(EntityTypeBuilder<TrainingProgram> builder)
     {
-        builder.ToTable("training_programs");
+        builder.ToTable("training_programs", t =>
+        {
+            // CHECK values from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_training_programs_level",
+                "[level] IS NULL OR [level] IN (N'beginner', N'intermediate', N'advanced')");
+            t.HasCheckConstraint("CK_training_programs_goal",
+                "[goal] IS NULL OR [goal] IN (N'strength', N'muscle_gain', N'weight_loss', N'endurance', N'general_fitness')");
+        });
         builder.HasKey(p => p.Id).HasName("PK_training_programs");
 
         builder.Property(p => p.Id).HasColumnName("id");

@@ -21,7 +21,7 @@ public class WorkoutSetConfiguration : IEntityTypeConfiguration<WorkoutSet>
         builder.Property(s => s.DurationSec).HasColumnName("duration_sec");
         builder.Property(s => s.RestSec).HasColumnName("rest_sec").HasDefaultValueSql("((60))");
         builder.Property(s => s.IsWarmup).HasColumnName("is_warmup").HasDefaultValue(false);
-        builder.Property(s => s.LoggedAt).HasColumnName("logged_at");
+        builder.Property(s => s.LoggedAt).HasColumnName("logged_at").IsRequired().HasDefaultValueSql("(SYSDATETIMEOFFSET())");
 
         builder.HasOne(s => s.Session)
             .WithMany()

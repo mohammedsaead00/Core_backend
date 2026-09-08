@@ -19,7 +19,7 @@ public class UserStreakConfiguration : IEntityTypeConfiguration<UserStreak>
         builder.Property(s => s.CurrentStreak).HasColumnName("current_streak").HasDefaultValueSql("((0))");
         builder.Property(s => s.LongestStreak).HasColumnName("longest_streak").HasDefaultValueSql("((0))");
         builder.Property(s => s.LastActiveDate).HasColumnName("last_active_date").HasColumnType("date");
-        builder.Property(s => s.FreezeAvailable).HasColumnName("freeze_available").HasDefaultValueSql("((1))");
+        builder.Property(s => s.FreezeAvailable).HasColumnName("freeze_available").IsRequired().HasDefaultValueSql("((1))");
         builder.Property(s => s.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("(SYSDATETIMEOFFSET())");
 
         builder.HasOne(s => s.User)

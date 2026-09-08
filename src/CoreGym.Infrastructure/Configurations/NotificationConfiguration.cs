@@ -8,7 +8,12 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
 {
     public void Configure(EntityTypeBuilder<Notification> builder)
     {
-        builder.ToTable("notifications");
+        builder.ToTable("notifications", t =>
+        {
+            // Values from the live prod schema dump (2026-09-07).
+            t.HasCheckConstraint("CK_notifications_type",
+                "[type] IN (N'message', N'plan')");
+        });
         builder.HasKey(n => n.Id).HasName("PK_notifications");
 
         builder.Property(n => n.Id).HasColumnName("id");
@@ -34,14 +39,15 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
             .HasConstraintName("FK_notifications_conversations")
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(n => n.Plan)
-            .WithMany()
-            .HasForeignKey(n => n.PlanId)
-            .HasConstraintName("FK_notifications_subscription_plans")
-            .OnDelete(DeleteBehavior.Restrict);
+        // NOTE: plan_id has NO foreign key in the live prod schema — kept FK-less for fidelity.
 
-        // NOTE: coach_id intentionally has NO FK — key space unverified
-        // (user id vs coaches.id). See MIGRATION_PROGRESS.md open question 12.
+        // RESOLVED (open question 12): the prod dump shows notifications.coach_id
+        // references profiles(id) — it is a USER id, and it does have an FK.
+        builder.HasOne(n => n.Coach)
+            .WithMany()
+            .HasForeignKey(n => n.CoachId)
+            .HasConstraintName("FK_notifications_coach_profiles")
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(n => new { n.UserId, n.CreatedAt })
             .HasDatabaseName("IX_notifications_user_id_created_at");

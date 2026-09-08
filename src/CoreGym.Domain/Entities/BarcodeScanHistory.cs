@@ -7,7 +7,8 @@ public class BarcodeScanHistory
 
     public Guid UserId { get; set; }
 
-    public string Barcode { get; set; } = null!;
+    /// <summary>Nullable — the original has no FK here; a scan may predate the product cache entry.</summary>
+    public string? Barcode { get; set; }
 
     public decimal? QuantityG { get; set; }
 
@@ -16,8 +17,6 @@ public class BarcodeScanHistory
     public DateTimeOffset? ScannedAt { get; set; }
 
     public Profile? User { get; set; }
-
-    public BarcodeProduct? Product { get; set; }
 
     public NutritionLog? NutritionLog { get; set; }
 }

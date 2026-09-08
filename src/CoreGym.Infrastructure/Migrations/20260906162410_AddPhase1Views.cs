@@ -41,8 +41,8 @@ SELECT
     wa.week_start,
     COUNT(*) AS days_logged,
     SUM(CASE WHEN wa.actual_pct >= wa.goal_pct THEN 1 ELSE 0 END) AS days_goal_met,
-    AVG(wa.actual_pct) AS avg_actual_pct,
-    AVG(wa.goal_pct) AS avg_goal_pct
+    AVG(CAST(wa.actual_pct AS decimal(10,2))) AS avg_actual_pct,
+    AVG(CAST(wa.goal_pct AS decimal(10,2))) AS avg_goal_pct
 FROM dbo.weekly_activity wa
 GROUP BY wa.user_id, wa.week_start");
 

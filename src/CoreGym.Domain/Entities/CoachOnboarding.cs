@@ -11,9 +11,10 @@ public class CoachOnboarding
 
     public int YearsExperience { get; set; }
 
-    public List<string>? Certifications { get; set; }
+    /// <summary>NOT NULL in the live prod schema; defaults to an empty JSON array.</summary>
+    public List<string> Certifications { get; set; } = [];
 
-    public List<string>? Specialization { get; set; }
+    public List<string> Specialization { get; set; } = [];
 
     public string? Bio { get; set; }
 
@@ -21,7 +22,8 @@ public class CoachOnboarding
 
     public decimal? PricePremium { get; set; }
 
-    public List<string>? Languages { get; set; }
+    /// <summary>NOT NULL in the live prod schema; default ["Arabic","English"].</summary>
+    public List<string> Languages { get; set; } = ["Arabic", "English"];
 
     public int? MaxClients { get; set; }
 

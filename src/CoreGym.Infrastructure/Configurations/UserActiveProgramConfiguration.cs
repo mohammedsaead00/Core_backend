@@ -36,6 +36,6 @@ public class UserActiveProgramConfiguration : IEntityTypeConfiguration<UserActiv
             .HasConstraintName("FK_user_active_program_training_programs")
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(p => p.UserId).HasDatabaseName("IX_user_active_program_user_id");
+        builder.HasIndex(p => p.UserId).IsUnique().HasDatabaseName("IX_user_active_program_user_id");
     }
 }

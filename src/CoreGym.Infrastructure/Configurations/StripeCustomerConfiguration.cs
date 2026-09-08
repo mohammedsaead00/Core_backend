@@ -22,8 +22,8 @@ public class StripeCustomerConfiguration : IEntityTypeConfiguration<StripeCustom
             .HasConstraintName("FK_stripe_customers_profiles")
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(sc => sc.UserId).HasDatabaseName("IX_stripe_customers_user_id");
-        // Checkout flow looks up the customer id per user.
-        builder.HasIndex(sc => sc.StripeCustomerId).HasDatabaseName("IX_stripe_customers_stripe_customer_id");
+        builder.HasIndex(sc => sc.UserId).IsUnique().HasDatabaseName("IX_stripe_customers_user_id");
+        // Checkout flow looks up the customer id per user (UNIQUE in the live prod dump).
+        builder.HasIndex(sc => sc.StripeCustomerId).IsUnique().HasDatabaseName("IX_stripe_customers_stripe_customer_id");
     }
 }
