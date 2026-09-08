@@ -15,7 +15,7 @@ warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
 warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
       No store type was specified for the decimal property 'WeightKg' on entity type 'WeightProgress'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (22ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (18ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       SELECT 1
 info: Microsoft.EntityFrameworkCore.Migrations[20411]
       Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
@@ -25,7 +25,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
       SELECT @result
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
       BEGIN
           CREATE TABLE [__EFMigrationsHistory] (
@@ -41,7 +41,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (10ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       SELECT [MigrationId], [ProductVersion]
       FROM [__EFMigrationsHistory]
       ORDER BY [MigrationId];
@@ -143,7 +143,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [FK_foods_profiles] FOREIGN KEY ([created_by]) REFERENCES [profiles] ([id]) ON DELETE NO ACTION
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [onboarding] (
           [id] uniqueidentifier NOT NULL,
           [user_id] uniqueidentifier NOT NULL,
@@ -181,7 +181,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [FK_user_goals_profiles] FOREIGN KEY ([user_id]) REFERENCES [profiles] ([id]) ON DELETE NO ACTION
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [user_streaks] (
           [user_id] uniqueidentifier NOT NULL,
           [current_streak] int NOT NULL DEFAULT (((0))),
@@ -193,7 +193,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [FK_user_streaks_profiles] FOREIGN KEY ([user_id]) REFERENCES [profiles] ([id]) ON DELETE NO ACTION
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [program_days] (
           [id] uniqueidentifier NOT NULL,
           [program_id] uniqueidentifier NOT NULL,
@@ -246,7 +246,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE INDEX [IX_user_goals_user_id] ON [user_goals] ([user_id]);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       
       CREATE TRIGGER dbo.trg_profiles_updated_at
       ON dbo.profiles
@@ -270,7 +270,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           FROM dbo.onboarding o INNER JOIN inserted i ON i.id = o.id;
       END
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       
       CREATE TRIGGER dbo.trg_user_goals_updated_at
       ON dbo.user_goals
@@ -294,7 +294,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           FROM dbo.user_streaks s INNER JOIN inserted i ON i.user_id = s.user_id;
       END
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
       VALUES (N'20260905165116_InitialSchemaGroups1And2', N'10.0.11');
 info: Microsoft.EntityFrameworkCore.Migrations[20402]
@@ -320,7 +320,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [CK_barcode_products_source] CHECK ([source] IN (N'openfoodfacts', N'gemini_estimate'))
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [daily_activity] (
           [id] uniqueidentifier NOT NULL,
           [user_id] uniqueidentifier NOT NULL,
@@ -336,7 +336,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [FK_daily_activity_profiles] FOREIGN KEY ([user_id]) REFERENCES [profiles] ([id]) ON DELETE NO ACTION
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [daily_summary] (
           [id] uniqueidentifier NOT NULL,
           [user_id] uniqueidentifier NOT NULL,
@@ -406,7 +406,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [FK_streak_activity_log_profiles] FOREIGN KEY ([user_id]) REFERENCES [profiles] ([id]) ON DELETE NO ACTION
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [user_active_program] (
           [id] uniqueidentifier NOT NULL,
           [user_id] uniqueidentifier NOT NULL,
@@ -489,7 +489,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [FK_barcode_scan_history_profiles] FOREIGN KEY ([user_id]) REFERENCES [profiles] ([id]) ON DELETE NO ACTION
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [food_scan_items] (
           [id] uniqueidentifier NOT NULL,
           [scan_id] uniqueidentifier NOT NULL,
@@ -507,7 +507,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [FK_food_scan_items_nutrition_logs] FOREIGN KEY ([nutrition_log_id]) REFERENCES [nutrition_logs] ([id]) ON DELETE NO ACTION
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [voice_food_log_items] (
           [id] uniqueidentifier NOT NULL,
           [log_id] uniqueidentifier NOT NULL,
@@ -543,7 +543,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [FK_exercise_progress_workout_sessions] FOREIGN KEY ([session_id]) REFERENCES [workout_sessions] ([id]) ON DELETE NO ACTION
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [workout_sets] (
           [id] uniqueidentifier NOT NULL,
           [session_id] uniqueidentifier NULL,
@@ -597,7 +597,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE INDEX [IX_nutrition_logs_food_id] ON [nutrition_logs] ([food_id]);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE INDEX [IX_nutrition_logs_user_id_logged_date] ON [nutrition_logs] ([user_id], [logged_date]);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
@@ -609,7 +609,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE INDEX [IX_user_active_program_user_id] ON [user_active_program] ([user_id]);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE INDEX [IX_user_programs_user_id] ON [user_programs] ([user_id]);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
@@ -633,7 +633,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE INDEX [IX_workout_sets_user_id_exercise_name] ON [workout_sets] ([user_id], [exercise_name]);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       
       CREATE TRIGGER dbo.trg_daily_summary_updated_at
       ON dbo.daily_summary
@@ -675,7 +675,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 info: Microsoft.EntityFrameworkCore.Migrations[20402]
       Applying migration '20260906155139_AddGroups4Schema'.
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [coach_onboarding] (
           [id] uniqueidentifier NOT NULL,
           [user_id] uniqueidentifier NOT NULL,
@@ -755,7 +755,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [FK_coaches_profiles] FOREIGN KEY ([user_id]) REFERENCES [profiles] ([id]) ON DELETE NO ACTION
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [stripe_customers] (
           [id] uniqueidentifier NOT NULL,
           [user_id] uniqueidentifier NOT NULL,
@@ -825,7 +825,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [FK_reviews_profiles] FOREIGN KEY ([client_id]) REFERENCES [profiles] ([id]) ON DELETE NO ACTION
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [subscriptions] (
           [id] uniqueidentifier NOT NULL,
           [client_id] uniqueidentifier NOT NULL,
@@ -864,7 +864,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [FK_client_assignments_profiles] FOREIGN KEY ([client_id]) REFERENCES [profiles] ([id]) ON DELETE NO ACTION
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [subscription_phases] (
           [id] uniqueidentifier NOT NULL,
           [subscription_id] uniqueidentifier NOT NULL,
@@ -1022,7 +1022,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       FROM dbo.weekly_activity wa
       GROUP BY wa.user_id, wa.week_start
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       
       CREATE VIEW dbo.weight_progress
       AS
@@ -1036,7 +1036,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       FROM dbo.body_measurements bm
       WHERE bm.weight_kg IS NOT NULL
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
       VALUES (N'20260906162410_AddPhase1Views', N'10.0.11');
 info: Microsoft.EntityFrameworkCore.Migrations[20402]
@@ -1089,7 +1089,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           CONSTRAINT [FK_notification_preferences_profiles] FOREIGN KEY ([user_id]) REFERENCES [profiles] ([id]) ON DELETE NO ACTION
       );
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE TABLE [messages] (
           [id] uniqueidentifier NOT NULL,
           [conversation_id] uniqueidentifier NOT NULL,
@@ -1163,13 +1163,13 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           FROM dbo.notification_preferences p INNER JOIN inserted i ON i.user_id = p.user_id;
       END
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
       VALUES (N'20260906170952_AddGroups5Schema', N'10.0.11');
 info: Microsoft.EntityFrameworkCore.Migrations[20402]
       Applying migration '20260907002558_AlignWithProdSchema'.
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [barcode_scan_history] DROP CONSTRAINT [FK_barcode_scan_history_barcode_products];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
@@ -1202,7 +1202,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [barcode_products] DROP CONSTRAINT [CK_barcode_products_source];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (207ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (110ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var nvarchar(max);
       SELECT @var = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1213,7 +1213,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [workout_sets] ALTER COLUMN [logged_at] datetimeoffset NOT NULL;
       ALTER TABLE [workout_sets] ADD DEFAULT ((SYSDATETIMEOFFSET())) FOR [logged_at];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (39ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (40ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var1 nvarchar(max);
       SELECT @var1 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1224,7 +1224,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [workout_sessions] ALTER COLUMN [started_at] datetimeoffset NOT NULL;
       ALTER TABLE [workout_sessions] ADD DEFAULT ((SYSDATETIMEOFFSET())) FOR [started_at];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (49ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (55ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DROP INDEX [IX_workout_sessions_user_id_session_date] ON [workout_sessions];
       DECLARE @var2 nvarchar(max);
       SELECT @var2 = QUOTENAME([d].[name])
@@ -1237,7 +1237,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [workout_sessions] ADD DEFAULT ((CAST(SYSUTCDATETIME() AS date))) FOR [session_date];
       CREATE INDEX [IX_workout_sessions_user_id_session_date] ON [workout_sessions] ([user_id], [session_date]);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (38ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (41ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var3 nvarchar(max);
       SELECT @var3 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1247,7 +1247,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [weekly_activity] ALTER COLUMN [goal_pct] int NULL;
       ALTER TABLE [weekly_activity] ADD DEFAULT 0 FOR [goal_pct];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (37ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (31ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var4 nvarchar(max);
       SELECT @var4 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1257,7 +1257,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [weekly_activity] ALTER COLUMN [actual_pct] int NULL;
       ALTER TABLE [weekly_activity] ADD DEFAULT 0 FOR [actual_pct];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (42ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (31ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var5 nvarchar(max);
       SELECT @var5 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1268,7 +1268,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [voice_food_logs] ALTER COLUMN [logged_at] datetimeoffset NOT NULL;
       ALTER TABLE [voice_food_logs] ADD DEFAULT ((SYSDATETIMEOFFSET())) FOR [logged_at];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (49ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (38ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var6 nvarchar(max);
       SELECT @var6 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1279,7 +1279,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [user_streaks] ALTER COLUMN [freeze_available] int NOT NULL;
       ALTER TABLE [user_streaks] ADD DEFAULT (((1))) FOR [freeze_available];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (49ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (52ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var7 nvarchar(max);
       SELECT @var7 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1290,7 +1290,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [subscriptions] ALTER COLUMN [tier] nvarchar(50) NOT NULL;
       ALTER TABLE [subscriptions] ADD DEFAULT ((N'basic')) FOR [tier];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (41ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (47ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var8 nvarchar(max);
       SELECT @var8 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1301,7 +1301,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [subscriptions] ALTER COLUMN [start_date] date NOT NULL;
       ALTER TABLE [subscriptions] ADD DEFAULT ((CAST(SYSUTCDATETIME() AS date))) FOR [start_date];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (43ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (41ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var9 nvarchar(max);
       SELECT @var9 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1312,7 +1312,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [payment_intents] ALTER COLUMN [tier] nvarchar(50) NOT NULL;
       ALTER TABLE [payment_intents] ADD DEFAULT ((N'standard')) FOR [tier];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (37ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (35ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var10 nvarchar(max);
       SELECT @var10 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1323,7 +1323,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [payment_intents] ALTER COLUMN [status] nvarchar(50) NOT NULL;
       ALTER TABLE [payment_intents] ADD DEFAULT ((N'pending')) FOR [status];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (39ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (34ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var11 nvarchar(max);
       SELECT @var11 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1334,7 +1334,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [payment_intents] ALTER COLUMN [currency] nvarchar(10) NOT NULL;
       ALTER TABLE [payment_intents] ADD DEFAULT ((N'usd')) FOR [currency];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (46ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (36ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DROP INDEX [IX_nutrition_logs_user_id_logged_date] ON [nutrition_logs];
       DECLARE @var12 nvarchar(max);
       SELECT @var12 = QUOTENAME([d].[name])
@@ -1347,7 +1347,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [nutrition_logs] ADD DEFAULT ((CAST(SYSUTCDATETIME() AS date))) FOR [logged_date];
       CREATE INDEX [IX_nutrition_logs_user_id_logged_date] ON [nutrition_logs] ([user_id], [logged_date]);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (37ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (32ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var13 nvarchar(max);
       SELECT @var13 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1358,7 +1358,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [food_scans] ALTER COLUMN [scanned_at] datetimeoffset NOT NULL;
       ALTER TABLE [food_scans] ADD DEFAULT ((SYSDATETIMEOFFSET())) FOR [scanned_at];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (36ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (27ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var14 nvarchar(max);
       SELECT @var14 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1376,7 +1376,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       IF @var15 IS NOT NULL EXEC(N'ALTER TABLE [daily_summary] DROP CONSTRAINT ' + @var15 + ';');
       ALTER TABLE [daily_summary] ADD DEFAULT CAST(0 AS bit) FOR [workout_done];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (31ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (27ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var16 nvarchar(max);
       SELECT @var16 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1385,7 +1385,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       IF @var16 IS NOT NULL EXEC(N'ALTER TABLE [daily_summary] DROP CONSTRAINT ' + @var16 + ';');
       ALTER TABLE [daily_summary] ADD DEFAULT 0 FOR [water_ml];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (32ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (28ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var17 nvarchar(max);
       SELECT @var17 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1394,7 +1394,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       IF @var17 IS NOT NULL EXEC(N'ALTER TABLE [daily_summary] DROP CONSTRAINT ' + @var17 + ';');
       ALTER TABLE [daily_summary] ADD DEFAULT 0 FOR [steps];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (29ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (27ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var18 nvarchar(max);
       SELECT @var18 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1403,7 +1403,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       IF @var18 IS NOT NULL EXEC(N'ALTER TABLE [daily_summary] DROP CONSTRAINT ' + @var18 + ';');
       ALTER TABLE [daily_summary] ADD DEFAULT 0.0 FOR [protein_g];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (32ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (28ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var19 nvarchar(max);
       SELECT @var19 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1412,7 +1412,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       IF @var19 IS NOT NULL EXEC(N'ALTER TABLE [daily_summary] DROP CONSTRAINT ' + @var19 + ';');
       ALTER TABLE [daily_summary] ADD DEFAULT 0.0 FOR [fat_g];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (30ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (28ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var20 nvarchar(max);
       SELECT @var20 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1421,7 +1421,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       IF @var20 IS NOT NULL EXEC(N'ALTER TABLE [daily_summary] DROP CONSTRAINT ' + @var20 + ';');
       ALTER TABLE [daily_summary] ADD DEFAULT 0.0 FOR [carbs_g];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (28ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (27ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var21 nvarchar(max);
       SELECT @var21 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1430,7 +1430,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       IF @var21 IS NOT NULL EXEC(N'ALTER TABLE [daily_summary] DROP CONSTRAINT ' + @var21 + ';');
       ALTER TABLE [daily_summary] ADD DEFAULT 0.0 FOR [calories_consumed];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (29ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (27ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var22 nvarchar(max);
       SELECT @var22 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1439,7 +1439,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       IF @var22 IS NOT NULL EXEC(N'ALTER TABLE [daily_summary] DROP CONSTRAINT ' + @var22 + ';');
       ALTER TABLE [daily_summary] ADD DEFAULT 0 FOR [calories_burned];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (29ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (27ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var23 nvarchar(max);
       SELECT @var23 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1459,7 +1459,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [daily_activity] ALTER COLUMN [synced_at] datetimeoffset NOT NULL;
       ALTER TABLE [daily_activity] ADD DEFAULT ((SYSDATETIMEOFFSET())) FOR [synced_at];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (32ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (27ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var25 nvarchar(max);
       SELECT @var25 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1468,7 +1468,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       IF @var25 IS NOT NULL EXEC(N'ALTER TABLE [daily_activity] DROP CONSTRAINT ' + @var25 + ';');
       ALTER TABLE [daily_activity] ALTER COLUMN [heart_rate_avg] decimal(6,2) NULL;
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (31ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (28ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var26 nvarchar(max);
       SELECT @var26 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1477,7 +1477,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       IF @var26 IS NOT NULL EXEC(N'ALTER TABLE [daily_activity] DROP CONSTRAINT ' + @var26 + ';');
       ALTER TABLE [daily_activity] ALTER COLUMN [exercise_minutes] decimal(6,2) NULL;
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (34ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (36ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DROP INDEX [IX_daily_activity_user_id_activity_date] ON [daily_activity];
       DECLARE @var27 nvarchar(max);
       SELECT @var27 = QUOTENAME([d].[name])
@@ -1490,7 +1490,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [daily_activity] ADD DEFAULT ((CAST(SYSUTCDATETIME() AS date))) FOR [activity_date];
       CREATE INDEX [IX_daily_activity_user_id_activity_date] ON [daily_activity] ([user_id], [activity_date]);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (43ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (36ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var28 nvarchar(max);
       SELECT @var28 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1501,7 +1501,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [coaches] ALTER COLUMN [is_active] bit NOT NULL;
       ALTER TABLE [coaches] ADD DEFAULT (((1))) FOR [is_active];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (40ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (38ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var29 nvarchar(max);
       SELECT @var29 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1512,7 +1512,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [coaches] ALTER COLUMN [bio] nvarchar(max) NOT NULL;
       ALTER TABLE [coaches] ADD DEFAULT ((N'')) FOR [bio];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (47ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (40ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var30 nvarchar(max);
       SELECT @var30 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1523,7 +1523,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [coach_onboarding] ALTER COLUMN [specialization] nvarchar(max) NOT NULL;
       ALTER TABLE [coach_onboarding] ADD DEFAULT N'' FOR [specialization];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (54ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (42ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var31 nvarchar(max);
       SELECT @var31 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1534,7 +1534,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [coach_onboarding] ALTER COLUMN [price_premium] decimal(10,2) NOT NULL;
       ALTER TABLE [coach_onboarding] ADD DEFAULT 0.0 FOR [price_premium];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (44ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (37ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var32 nvarchar(max);
       SELECT @var32 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1545,7 +1545,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [coach_onboarding] ALTER COLUMN [price_monthly] decimal(10,2) NOT NULL;
       ALTER TABLE [coach_onboarding] ADD DEFAULT 0.0 FOR [price_monthly];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (56ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (39ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var33 nvarchar(max);
       SELECT @var33 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1556,7 +1556,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [coach_onboarding] ALTER COLUMN [max_clients] int NOT NULL;
       ALTER TABLE [coach_onboarding] ADD DEFAULT (((10))) FOR [max_clients];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (101ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (39ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var34 nvarchar(max);
       SELECT @var34 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1567,7 +1567,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [coach_onboarding] ALTER COLUMN [languages] nvarchar(max) NOT NULL;
       ALTER TABLE [coach_onboarding] ADD DEFAULT ((N'["Arabic","English"]')) FOR [languages];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (59ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (36ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var35 nvarchar(max);
       SELECT @var35 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1578,7 +1578,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [coach_onboarding] ALTER COLUMN [display_name] nvarchar(200) NOT NULL;
       ALTER TABLE [coach_onboarding] ADD DEFAULT ((N'')) FOR [display_name];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (44ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (40ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var36 nvarchar(max);
       SELECT @var36 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1589,7 +1589,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [coach_onboarding] ALTER COLUMN [certifications] nvarchar(max) NOT NULL;
       ALTER TABLE [coach_onboarding] ADD DEFAULT N'' FOR [certifications];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (47ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (40ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var37 nvarchar(max);
       SELECT @var37 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1600,7 +1600,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [coach_onboarding] ALTER COLUMN [bio] nvarchar(max) NOT NULL;
       ALTER TABLE [coach_onboarding] ADD DEFAULT ((N'')) FOR [bio];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (41ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (32ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var38 nvarchar(max);
       SELECT @var38 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1611,7 +1611,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [client_assignments] ALTER COLUMN [assigned_at] datetimeoffset NOT NULL;
       ALTER TABLE [client_assignments] ADD DEFAULT ((SYSDATETIMEOFFSET())) FOR [assigned_at];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (59ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (39ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DROP INDEX [IX_body_measurements_user_id_measured_date] ON [body_measurements];
       DECLARE @var39 nvarchar(max);
       SELECT @var39 = QUOTENAME([d].[name])
@@ -1624,7 +1624,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [body_measurements] ADD DEFAULT ((CAST(SYSUTCDATETIME() AS date))) FOR [measured_date];
       CREATE INDEX [IX_body_measurements_user_id_measured_date] ON [body_measurements] ([user_id], [measured_date]);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (47ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (33ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var40 nvarchar(max);
       SELECT @var40 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1635,7 +1635,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       ALTER TABLE [barcode_scan_history] ALTER COLUMN [scanned_at] datetimeoffset NOT NULL;
       ALTER TABLE [barcode_scan_history] ADD DEFAULT ((SYSDATETIMEOFFSET())) FOR [scanned_at];
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (43ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (32ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var41 nvarchar(max);
       SELECT @var41 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1644,7 +1644,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       IF @var41 IS NOT NULL EXEC(N'ALTER TABLE [barcode_scan_history] DROP CONSTRAINT ' + @var41 + ';');
       ALTER TABLE [barcode_scan_history] ALTER COLUMN [barcode] nvarchar(50) NULL;
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (54ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (46ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       DECLARE @var42 nvarchar(max);
       SELECT @var42 = QUOTENAME([d].[name])
       FROM [sys].[default_constraints] [d]
@@ -1670,7 +1670,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [voice_food_logs] ADD CONSTRAINT [CK_voice_food_logs_confidence] CHECK ([confidence] IS NULL OR [confidence] IN (N'low', N'medium', N'high'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [user_programs] ADD CONSTRAINT [CK_user_programs_muscle_group] CHECK ([muscle_group] IN (N'chest', N'arms', N'legs', N'core'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
@@ -1694,7 +1694,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [subscription_phases] ADD CONSTRAINT [CK_subscription_phases_status] CHECK ([status] IS NULL OR [status] IN (N'upcoming', N'in_progress', N'completed'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [subscription_phases] ADD CONSTRAINT [CK_subscription_phases_type] CHECK ([type] IS NULL OR [type] IN (N'workout', N'nutrition', N'combined'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
@@ -1703,7 +1703,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       CREATE UNIQUE INDEX [IX_stripe_customers_user_id] ON [stripe_customers] ([user_id]);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [reviews] ADD CONSTRAINT [CK_reviews_rating] CHECK ([rating] >= 1 AND [rating] <= 5);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
@@ -1712,7 +1712,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [profiles] ADD CONSTRAINT [CK_profiles_gender] CHECK ([gender] IS NULL OR [gender] IN (N'male', N'female'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [payment_intents] ADD CONSTRAINT [CK_payment_intents_status] CHECK ([status] IN (N'pending', N'succeeded', N'failed', N'refunded'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
@@ -1724,13 +1724,13 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [onboarding] ADD CONSTRAINT [CK_onboarding_gender] CHECK ([gender] IS NULL OR [gender] IN (N'male', N'female'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [onboarding] ADD CONSTRAINT [CK_onboarding_goal] CHECK ([goal] IS NULL OR [goal] IN (N'muscle_gain', N'weight_loss', N'endurance', N'flexibility', N'general_fitness'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [onboarding] ADD CONSTRAINT [CK_onboarding_weekly_workouts] CHECK ([weekly_workouts] IS NULL OR ([weekly_workouts] >= 1 AND [weekly_workouts] <= 7));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [nutrition_logs] ADD CONSTRAINT [CK_nutrition_logs_meal_type] CHECK ([meal_type] IS NULL OR [meal_type] IN (N'breakfast', N'lunch', N'dinner', N'snack'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
@@ -1742,10 +1742,10 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [messages] ADD CONSTRAINT [CK_messages_type] CHECK ([type] IN (N'text', N'image', N'file', N'workout_plan', N'nutrition_plan', N'voice'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [food_scans] ADD CONSTRAINT [CK_food_scans_confidence] CHECK ([confidence] IS NULL OR [confidence] IN (N'low', N'medium', N'high'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [exercises] ADD CONSTRAINT [CK_exercises_category] CHECK ([category] IS NULL OR [category] IN (N'compound', N'isolation', N'cardio', N'stretching'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
@@ -1769,10 +1769,10 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [barcode_products] ADD CONSTRAINT [CK_barcode_products_source] CHECK ([source] IN (N'openfoodfacts', N'gemini_estimate', N'manual'));
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       ALTER TABLE [notifications] ADD CONSTRAINT [FK_notifications_coach_profiles] FOREIGN KEY ([coach_id]) REFERENCES [profiles] ([id]) ON DELETE NO ACTION;
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
       VALUES (N'20260907002558_AlignWithProdSchema', N'10.0.11');
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
@@ -1790,20 +1790,20 @@ info: Microsoft.Hosting.Lifetime[0]
       Hosting environment: Development
 info: Microsoft.Hosting.Lifetime[0]
       Content root path: F:\core_project
-info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
-      Request starting HTTP/1.1 GET http://localhost:5080/openapi/v1.json - - -
-info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
-      Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (25ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (14ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       SELECT [p].[id]
       FROM [profiles] AS [p]
 info: CoreGym.Api.Jobs.MealReminderJob[0]
       Meal reminders: 0 sent, 0 profiles (0 disabled, 0 quiet hours, 0 already logged, 0 already reminded)
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost:5080/openapi/v1.json - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 GET http://localhost:5080/openapi/v1.json - 200 - application/json;charset=utf-8 508.3889ms
+      Request finished HTTP/1.1 GET http://localhost:5080/openapi/v1.json - 200 - application/json;charset=utf-8 488.4942ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 POST http://localhost:5080/api/me - application/json 51
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -1811,12 +1811,12 @@ info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
       Route matched with {action = "Provision", controller = "Profile"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Provision(CoreGym.Api.Contracts.ProvisionProfileRequest, System.Threading.CancellationToken) on controller CoreGym.Api.Controllers.ProfileController (CoreGym.Api).
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (21ms) [Parameters=[@userId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (17ms) [Parameters=[@userId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(1) [p].[id], [p].[age], [p].[avatar_url], [p].[created_at], [p].[email], [p].[fitness_goal], [p].[full_name], [p].[gender], [p].[height_cm], [p].[name], [p].[role], [p].[updated_at], [p].[weight_kg]
       FROM [profiles] AS [p]
       WHERE [p].[id] = @userId
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (6ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Int32), @p2='?' (Size = 500), @p3='?' (Size = 320), @p4='?' (Size = 200), @p5='?' (Size = 200), @p6='?' (Size = 50), @p7='?' (Precision = 5) (Scale = 1) (DbType = Decimal), @p8='?' (Size = 200), @p9='?' (Precision = 5) (Scale = 2) (DbType = Decimal)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Int32), @p2='?' (Size = 500), @p3='?' (Size = 320), @p4='?' (Size = 200), @p5='?' (Size = 200), @p6='?' (Size = 50), @p7='?' (Precision = 5) (Scale = 1) (DbType = Decimal), @p8='?' (Size = 200), @p9='?' (Precision = 5) (Scale = 2) (DbType = Decimal)], CommandType='Text', CommandTimeout='30']
       SET NOCOUNT ON;
       INSERT INTO [profiles] ([id], [age], [avatar_url], [email], [fitness_goal], [full_name], [gender], [height_cm], [name], [weight_kg])
       VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
@@ -1826,11 +1826,11 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing CreatedResult, writing value of type 'CoreGym.Domain.Entities.Profile'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.ProfileController.Provision (CoreGym.Api) in 720.2878ms
+      Executed action CoreGym.Api.Controllers.ProfileController.Provision (CoreGym.Api) in 518.0505ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.ProfileController.Provision (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 POST http://localhost:5080/api/me - 201 - application/json;+charset=utf-8 879.6904ms
+      Request finished HTTP/1.1 POST http://localhost:5080/api/me - 201 - application/json;+charset=utf-8 616.8127ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 GET http://localhost:5080/api/me - - -
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -1838,18 +1838,18 @@ info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
       Route matched with {action = "GetMe", controller = "Profile"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMe(System.Threading.CancellationToken) on controller CoreGym.Api.Controllers.ProfileController (CoreGym.Api).
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (5ms) [Parameters=[@UserId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (4ms) [Parameters=[@UserId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(1) [p].[id], [p].[age], [p].[avatar_url], [p].[created_at], [p].[email], [p].[fitness_goal], [p].[full_name], [p].[gender], [p].[height_cm], [p].[name], [p].[role], [p].[updated_at], [p].[weight_kg]
       FROM [profiles] AS [p]
       WHERE [p].[id] = @UserId
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing OkObjectResult, writing value of type 'CoreGym.Domain.Entities.Profile'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.ProfileController.GetMe (CoreGym.Api) in 30.6543ms
+      Executed action CoreGym.Api.Controllers.ProfileController.GetMe (CoreGym.Api) in 25.6319ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.ProfileController.GetMe (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 GET http://localhost:5080/api/me - 200 - application/json;+charset=utf-8 49.9423ms
+      Request finished HTTP/1.1 GET http://localhost:5080/api/me - 200 - application/json;+charset=utf-8 40.8649ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 PUT http://localhost:5080/api/me - application/json 49
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -1862,7 +1862,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       FROM [profiles] AS [p]
       WHERE [p].[id] = @UserId
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (13ms) [Parameters=[@p3='?' (DbType = Guid), @p0='?' (DbType = Int32), @p1='?' (Size = 200), @p2='?' (Precision = 5) (Scale = 2) (DbType = Decimal)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (42ms) [Parameters=[@p3='?' (DbType = Guid), @p0='?' (DbType = Int32), @p1='?' (Size = 200), @p2='?' (Precision = 5) (Scale = 2) (DbType = Decimal)], CommandType='Text', CommandTimeout='30']
       SET IMPLICIT_TRANSACTIONS OFF;
       SET NOCOUNT ON;
       UPDATE [profiles] SET [age] = @p0, [name] = @p1, [weight_kg] = @p2
@@ -1871,11 +1871,11 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing OkObjectResult, writing value of type 'CoreGym.Domain.Entities.Profile'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.ProfileController.UpdateMe (CoreGym.Api) in 53.0517ms
+      Executed action CoreGym.Api.Controllers.ProfileController.UpdateMe (CoreGym.Api) in 87.5635ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.ProfileController.UpdateMe (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 PUT http://localhost:5080/api/me - 200 - application/json;+charset=utf-8 63.1872ms
+      Request finished HTTP/1.1 PUT http://localhost:5080/api/me - 200 - application/json;+charset=utf-8 98.2860ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 PUT http://localhost:5080/api/me/onboarding - application/json 100
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -1883,12 +1883,12 @@ info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
       Route matched with {action = "Upsert", controller = "Onboarding"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Upsert(CoreGym.Api.Contracts.UpsertOnboardingRequest, System.Threading.CancellationToken) on controller CoreGym.Api.Controllers.OnboardingController (CoreGym.Api).
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (4ms) [Parameters=[@UserId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (3ms) [Parameters=[@UserId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(1) [o].[id], [o].[activity_level], [o].[age], [o].[completed], [o].[created_at], [o].[gender], [o].[goal], [o].[height_cm], [o].[target_weight], [o].[updated_at], [o].[user_id], [o].[weekly_workouts], [o].[weight_kg]
       FROM [onboarding] AS [o]
       WHERE [o].[user_id] = @UserId
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (6ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 50), @p2='?' (DbType = Int32), @p3='?' (DbType = Boolean), @p4='?' (Size = 50), @p5='?' (Size = 50), @p6='?' (Precision = 5) (Scale = 1) (DbType = Decimal), @p7='?' (Precision = 5) (Scale = 2) (DbType = Decimal), @p8='?' (DbType = Guid), @p9='?' (DbType = Int32), @p10='?' (Precision = 5) (Scale = 2) (DbType = Decimal)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (4ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 50), @p2='?' (DbType = Int32), @p3='?' (DbType = Boolean), @p4='?' (Size = 50), @p5='?' (Size = 50), @p6='?' (Precision = 5) (Scale = 1) (DbType = Decimal), @p7='?' (Precision = 5) (Scale = 2) (DbType = Decimal), @p8='?' (DbType = Guid), @p9='?' (DbType = Int32), @p10='?' (Precision = 5) (Scale = 2) (DbType = Decimal)], CommandType='Text', CommandTimeout='30']
       SET NOCOUNT ON;
       INSERT INTO [onboarding] ([id], [activity_level], [age], [completed], [gender], [goal], [height_cm], [target_weight], [user_id], [weekly_workouts], [weight_kg])
       VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10);
@@ -1898,11 +1898,11 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing OkObjectResult, writing value of type 'CoreGym.Domain.Entities.Onboarding'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.OnboardingController.Upsert (CoreGym.Api) in 90.9451ms
+      Executed action CoreGym.Api.Controllers.OnboardingController.Upsert (CoreGym.Api) in 70.0544ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.OnboardingController.Upsert (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 PUT http://localhost:5080/api/me/onboarding - 200 - application/json;+charset=utf-8 100.4111ms
+      Request finished HTTP/1.1 PUT http://localhost:5080/api/me/onboarding - 200 - application/json;+charset=utf-8 76.4258ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 PUT http://localhost:5080/api/me/goals - application/json 62
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -1910,12 +1910,12 @@ info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
       Route matched with {action = "Upsert", controller = "Goals"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Upsert(CoreGym.Api.Contracts.UpsertGoalsRequest, System.Threading.CancellationToken) on controller CoreGym.Api.Controllers.GoalsController (CoreGym.Api).
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[@UserId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[@UserId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(1) [u].[id], [u].[created_at], [u].[daily_calories], [u].[daily_carbs_g], [u].[daily_fat_g], [u].[daily_protein_g], [u].[daily_sleep_hours], [u].[daily_steps], [u].[daily_water_ml], [u].[target_weight_kg], [u].[updated_at], [u].[user_id], [u].[weekly_workouts]
       FROM [user_goals] AS [u]
       WHERE [u].[user_id] = @UserId
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (4ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = Int32), @p4='?' (Precision = 5) (Scale = 2) (DbType = Decimal), @p5='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = Int32), @p4='?' (Precision = 5) (Scale = 2) (DbType = Decimal), @p5='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
       SET NOCOUNT ON;
       INSERT INTO [user_goals] ([id], [daily_calories], [daily_protein_g], [daily_water_ml], [target_weight_kg], [user_id])
       VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
@@ -1925,11 +1925,11 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing OkObjectResult, writing value of type 'CoreGym.Domain.Entities.UserGoal'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.GoalsController.Upsert (CoreGym.Api) in 103.1617ms
+      Executed action CoreGym.Api.Controllers.GoalsController.Upsert (CoreGym.Api) in 85.5782ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.GoalsController.Upsert (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 PUT http://localhost:5080/api/me/goals - 200 - application/json;+charset=utf-8 114.8599ms
+      Request finished HTTP/1.1 PUT http://localhost:5080/api/me/goals - 200 - application/json;+charset=utf-8 97.7882ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 POST http://localhost:5080/api/nutrition/logs - application/json 89
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -1937,24 +1937,24 @@ info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
       Route matched with {action = "Create", controller = "Nutrition"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Create(CoreGym.Api.Contracts.CreateNutritionLogRequest, System.Threading.CancellationToken) on controller CoreGym.Api.Controllers.NutritionController (CoreGym.Api).
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (10ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p2='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p3='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p4='?' (DbType = Guid), @p5='?' (Size = 200), @p6='?' (DbType = DateTimeOffset), @p7='?' (DbType = Date), @p8='?' (Size = 50), @p9='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p10='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (4ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p2='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p3='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p4='?' (DbType = Guid), @p5='?' (Size = 200), @p6='?' (DbType = DateTimeOffset), @p7='?' (DbType = Date), @p8='?' (Size = 50), @p9='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p10='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
       SET IMPLICIT_TRANSACTIONS OFF;
       SET NOCOUNT ON;
       INSERT INTO [nutrition_logs] ([id], [calories], [carbs_g], [fat_g], [food_id], [food_name], [logged_at], [logged_date], [meal_type], [protein_g], [user_id])
       OUTPUT INSERTED.[quantity], INSERTED.[serving_unit]
       VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10);
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (9ms) [Parameters=[@userId='?' (DbType = Guid), @date='?' (DbType = Date)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (6ms) [Parameters=[@userId='?' (DbType = Guid), @date='?' (DbType = Date)], CommandType='Text', CommandTimeout='30']
       SELECT [n].[calories] AS [Calories], [n].[protein_g] AS [ProteinG], [n].[carbs_g] AS [CarbsG], [n].[fat_g] AS [FatG]
       FROM [nutrition_logs] AS [n]
       WHERE [n].[user_id] = @userId AND [n].[logged_date] = @date
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (4ms) [Parameters=[@userId='?' (DbType = Guid), @date='?' (DbType = Date)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (3ms) [Parameters=[@userId='?' (DbType = Guid), @date='?' (DbType = Date)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(2) [d].[id], [d].[active_minutes], [d].[calories_burned], [d].[calories_consumed], [d].[carbs_g], [d].[created_at], [d].[fat_g], [d].[mood], [d].[notes], [d].[protein_g], [d].[sleep_hours], [d].[steps], [d].[summary_date], [d].[updated_at], [d].[user_id], [d].[water_ml], [d].[workout_done], [d].[workout_duration]
       FROM [daily_summary] AS [d]
       WHERE [d].[user_id] = @userId AND [d].[summary_date] = @date
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (6ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p2='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p3='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p4='?' (DbType = Int32), @p5='?' (Size = 4000), @p6='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p7='?' (Precision = 4) (Scale = 2) (DbType = Decimal), @p8='?' (DbType = Date), @p9='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p2='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p3='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p4='?' (DbType = Int32), @p5='?' (Size = 4000), @p6='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p7='?' (Precision = 4) (Scale = 2) (DbType = Decimal), @p8='?' (DbType = Date), @p9='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
       SET NOCOUNT ON;
       INSERT INTO [daily_summary] ([id], [calories_consumed], [carbs_g], [fat_g], [mood], [notes], [protein_g], [sleep_hours], [summary_date], [user_id])
       VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
@@ -1964,11 +1964,11 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing CreatedResult, writing value of type 'CoreGym.Domain.Entities.NutritionLog'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.NutritionController.Create (CoreGym.Api) in 285.7492ms
+      Executed action CoreGym.Api.Controllers.NutritionController.Create (CoreGym.Api) in 212.4498ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.NutritionController.Create (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 POST http://localhost:5080/api/nutrition/logs - 201 - application/json;+charset=utf-8 294.5064ms
+      Request finished HTTP/1.1 POST http://localhost:5080/api/nutrition/logs - 201 - application/json;+charset=utf-8 222.2861ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 POST http://localhost:5080/api/nutrition/logs - application/json 91
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -1976,7 +1976,7 @@ info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
       Route matched with {action = "Create", controller = "Nutrition"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Create(CoreGym.Api.Contracts.CreateNutritionLogRequest, System.Threading.CancellationToken) on controller CoreGym.Api.Controllers.NutritionController (CoreGym.Api).
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p2='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p3='?' (DbType = Guid), @p4='?' (Size = 200), @p5='?' (DbType = DateTimeOffset), @p6='?' (DbType = Date), @p7='?' (Size = 50), @p8='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p9='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (4ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p2='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p3='?' (DbType = Guid), @p4='?' (Size = 200), @p5='?' (DbType = DateTimeOffset), @p6='?' (DbType = Date), @p7='?' (Size = 50), @p8='?' (Precision = 8) (Scale = 2) (DbType = Decimal), @p9='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
       SET IMPLICIT_TRANSACTIONS OFF;
       SET NOCOUNT ON;
       INSERT INTO [nutrition_logs] ([id], [calories], [fat_g], [food_id], [food_name], [logged_at], [logged_date], [meal_type], [protein_g], [user_id])
@@ -1988,7 +1988,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       FROM [nutrition_logs] AS [n]
       WHERE [n].[user_id] = @userId AND [n].[logged_date] = @date
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (6ms) [Parameters=[@userId='?' (DbType = Guid), @date='?' (DbType = Date)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (7ms) [Parameters=[@userId='?' (DbType = Guid), @date='?' (DbType = Date)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(2) [d].[id], [d].[active_minutes], [d].[calories_burned], [d].[calories_consumed], [d].[carbs_g], [d].[created_at], [d].[fat_g], [d].[mood], [d].[notes], [d].[protein_g], [d].[sleep_hours], [d].[steps], [d].[summary_date], [d].[updated_at], [d].[user_id], [d].[water_ml], [d].[workout_done], [d].[workout_duration]
       FROM [daily_summary] AS [d]
       WHERE [d].[user_id] = @userId AND [d].[summary_date] = @date
@@ -2002,11 +2002,11 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing CreatedResult, writing value of type 'CoreGym.Domain.Entities.NutritionLog'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.NutritionController.Create (CoreGym.Api) in 39.1339ms
+      Executed action CoreGym.Api.Controllers.NutritionController.Create (CoreGym.Api) in 38.7083ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.NutritionController.Create (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 POST http://localhost:5080/api/nutrition/logs - 201 - application/json;+charset=utf-8 40.1626ms
+      Request finished HTTP/1.1 POST http://localhost:5080/api/nutrition/logs - 201 - application/json;+charset=utf-8 39.6513ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 GET http://localhost:5080/api/me/summary/2026-09-08 - - -
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -2021,11 +2021,11 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing OkObjectResult, writing value of type 'CoreGym.Domain.Entities.DailySummary'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.SummaryController.GetByDate (CoreGym.Api) in 65.3174ms
+      Executed action CoreGym.Api.Controllers.SummaryController.GetByDate (CoreGym.Api) in 22.5502ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.SummaryController.GetByDate (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 GET http://localhost:5080/api/me/summary/2026-09-08 - 200 - application/json;+charset=utf-8 71.2340ms
+      Request finished HTTP/1.1 GET http://localhost:5080/api/me/summary/2026-09-08 - 200 - application/json;+charset=utf-8 30.1291ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 POST http://localhost:5080/api/me/streak/activity - application/json 20
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -2033,7 +2033,7 @@ info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
       Route matched with {action = "RecordActivity", controller = "Streak"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] RecordActivity(CoreGym.Api.Contracts.StreakActivityRequest, System.Threading.CancellationToken) on controller CoreGym.Api.Controllers.StreakController (CoreGym.Api).
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (4ms) [Parameters=[@userId='?' (DbType = Guid), @today='?' (DbType = Date), @normalizedSource='?' (Size = 50)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (3ms) [Parameters=[@userId='?' (DbType = Guid), @today='?' (DbType = Date), @normalizedSource='?' (Size = 50)], CommandType='Text', CommandTimeout='30']
       SELECT CASE
           WHEN EXISTS (
               SELECT 1
@@ -2042,7 +2042,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
           ELSE CAST(0 AS bit)
       END
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (2ms) [Parameters=[@userId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (1ms) [Parameters=[@userId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(2) [u].[user_id], [u].[current_streak], [u].[freeze_available], [u].[last_active_date], [u].[longest_streak], [u].[updated_at]
       FROM [user_streaks] AS [u]
       WHERE [u].[user_id] = @userId
@@ -2058,7 +2058,7 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       FROM [user_streaks]
       WHERE @@ROWCOUNT = 1 AND [user_id] = @p4;
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (1ms) [Parameters=[@userId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (0ms) [Parameters=[@userId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(2) [u].[user_id], [u].[current_streak], [u].[freeze_available], [u].[last_active_date], [u].[longest_streak], [u].[updated_at]
       FROM [user_streaks] AS [u]
       WHERE [u].[user_id] = @userId
@@ -2083,11 +2083,11 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing OkObjectResult, writing value of type 'CoreGym.Domain.ReadModels.StreakStatus'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.StreakController.RecordActivity (CoreGym.Api) in 127.6915ms
+      Executed action CoreGym.Api.Controllers.StreakController.RecordActivity (CoreGym.Api) in 119.1389ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.StreakController.RecordActivity (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 POST http://localhost:5080/api/me/streak/activity - 200 - application/json;+charset=utf-8 134.6598ms
+      Request finished HTTP/1.1 POST http://localhost:5080/api/me/streak/activity - 200 - application/json;+charset=utf-8 126.7994ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 POST http://localhost:5080/api/workouts/sessions - application/json 165
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -2123,11 +2123,11 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing CreatedResult, writing value of type '<>f__AnonymousType8`2[[CoreGym.Domain.Entities.WorkoutSession, CoreGym.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.IReadOnlyList`1[[CoreGym.Api.Contracts.CreateWorkoutSetRequest, CoreGym.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.WorkoutsController.CreateSession (CoreGym.Api) in 128.0382ms
+      Executed action CoreGym.Api.Controllers.WorkoutsController.CreateSession (CoreGym.Api) in 159.3843ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.WorkoutsController.CreateSession (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 POST http://localhost:5080/api/workouts/sessions - 201 - application/json;+charset=utf-8 134.9472ms
+      Request finished HTTP/1.1 POST http://localhost:5080/api/workouts/sessions - 201 - application/json;+charset=utf-8 165.9381ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 GET http://localhost:5080/api/me/summary/2026-09-08 - - -
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -2135,18 +2135,18 @@ info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
       Route matched with {action = "GetByDate", controller = "Summary"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetByDate(System.DateOnly, System.Threading.CancellationToken) on controller CoreGym.Api.Controllers.SummaryController (CoreGym.Api).
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (1ms) [Parameters=[@UserId='?' (DbType = Guid), @ToDateTime='?' (DbType = Date)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (0ms) [Parameters=[@UserId='?' (DbType = Guid), @ToDateTime='?' (DbType = Date)], CommandType='Text', CommandTimeout='30']
       SELECT TOP(2) [d].[id], [d].[active_minutes], [d].[calories_burned], [d].[calories_consumed], [d].[carbs_g], [d].[created_at], [d].[fat_g], [d].[mood], [d].[notes], [d].[protein_g], [d].[sleep_hours], [d].[steps], [d].[summary_date], [d].[updated_at], [d].[user_id], [d].[water_ml], [d].[workout_done], [d].[workout_duration]
       FROM [daily_summary] AS [d]
       WHERE [d].[user_id] = @UserId AND [d].[summary_date] = @ToDateTime
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing OkObjectResult, writing value of type 'CoreGym.Domain.Entities.DailySummary'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.SummaryController.GetByDate (CoreGym.Api) in 2.9361ms
+      Executed action CoreGym.Api.Controllers.SummaryController.GetByDate (CoreGym.Api) in 2.5922ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.SummaryController.GetByDate (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 GET http://localhost:5080/api/me/summary/2026-09-08 - 200 - application/json;+charset=utf-8 3.6330ms
+      Request finished HTTP/1.1 GET http://localhost:5080/api/me/summary/2026-09-08 - 200 - application/json;+charset=utf-8 3.7732ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 GET http://localhost:5080/api/chat/unread - - -
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -2154,23 +2154,23 @@ info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
       Route matched with {action = "UnreadCount", controller = "Chat"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] UnreadCount(System.Threading.CancellationToken) on controller CoreGym.Api.Controllers.ChatController (CoreGym.Api).
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[@userId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[@userId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
       SELECT COALESCE(SUM([c].[client_unread]), 0)
       FROM [conversations] AS [c]
       WHERE [c].[client_id] = @userId
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[@userId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (2ms) [Parameters=[@userId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
       SELECT COALESCE(SUM([c].[coach_unread]), 0)
       FROM [conversations] AS [c]
       WHERE [c].[coach_id] = @userId
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing OkObjectResult, writing value of type 'CoreGym.Api.Contracts.UnreadCountResponse'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.ChatController.UnreadCount (CoreGym.Api) in 65.8214ms
+      Executed action CoreGym.Api.Controllers.ChatController.UnreadCount (CoreGym.Api) in 43.7254ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.ChatController.UnreadCount (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 GET http://localhost:5080/api/chat/unread - 200 - application/json;+charset=utf-8 76.5997ms
+      Request finished HTTP/1.1 GET http://localhost:5080/api/chat/unread - 200 - application/json;+charset=utf-8 51.0696ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 GET http://localhost:5080/api/foods - - -
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -2186,11 +2186,11 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[CoreGym.Domain.Entities.Food, CoreGym.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.FoodsController.List (CoreGym.Api) in 21.8037ms
+      Executed action CoreGym.Api.Controllers.FoodsController.List (CoreGym.Api) in 16.6924ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.FoodsController.List (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 GET http://localhost:5080/api/foods - 200 - application/json;+charset=utf-8 28.4333ms
+      Request finished HTTP/1.1 GET http://localhost:5080/api/foods - 200 - application/json;+charset=utf-8 25.1471ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 GET http://localhost:5080/api/coaches - - -
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -2198,7 +2198,7 @@ info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
       Route matched with {action = "List", controller = "Coaches"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] List(Int32, Int32, System.Threading.CancellationToken) on controller CoreGym.Api.Controllers.CoachesController (CoreGym.Api).
 info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (7ms) [Parameters=[@p='?' (DbType = Int32), @p1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      Executed DbCommand (5ms) [Parameters=[@p='?' (DbType = Int32), @p1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
       SELECT [c].[id], COALESCE([p].[name], [p].[full_name]), [p].[avatar_url], [c].[rating], [c].[specialization], [c].[price_monthly]
       FROM [coaches] AS [c]
       INNER JOIN [profiles] AS [p] ON [c].[user_id] = [p].[id]
@@ -2208,11 +2208,11 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[CoreGym.Api.Contracts.CoachListItemResponse, CoreGym.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.CoachesController.List (CoreGym.Api) in 55.4143ms
+      Executed action CoreGym.Api.Controllers.CoachesController.List (CoreGym.Api) in 49.833ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.CoachesController.List (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 GET http://localhost:5080/api/coaches - 200 - application/json;+charset=utf-8 64.0085ms
+      Request finished HTTP/1.1 GET http://localhost:5080/api/coaches - 200 - application/json;+charset=utf-8 55.7655ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 GET http://localhost:5080/api/me - - -
 info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[2]
@@ -2221,7 +2221,7 @@ info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[2]
 info: Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler[12]
       AuthenticationScheme: Bearer was challenged.
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 GET http://localhost:5080/api/me - 401 0 - 6.4324ms
+      Request finished HTTP/1.1 GET http://localhost:5080/api/me - 401 0 - 5.2355ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 POST http://localhost:5080/api/webhooks/stripe - application/json 14
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -2231,11 +2231,11 @@ info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing BadRequestObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.StripeWebhookController.Stripe (CoreGym.Api) in 5.0066ms
+      Executed action CoreGym.Api.Controllers.StripeWebhookController.Stripe (CoreGym.Api) in 5.8813ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.StripeWebhookController.Stripe (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 POST http://localhost:5080/api/webhooks/stripe - 400 - application/json;+charset=utf-8 12.7863ms
+      Request finished HTTP/1.1 POST http://localhost:5080/api/webhooks/stripe - 400 - application/json;+charset=utf-8 12.8625ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 POST http://localhost:5080/api/webhooks/stripe - application/json 14
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -2245,11 +2245,11 @@ info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing BadRequestObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.StripeWebhookController.Stripe (CoreGym.Api) in 1.0431ms
+      Executed action CoreGym.Api.Controllers.StripeWebhookController.Stripe (CoreGym.Api) in 1.015ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.StripeWebhookController.Stripe (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 POST http://localhost:5080/api/webhooks/stripe - 400 - application/json;+charset=utf-8 1.3047ms
+      Request finished HTTP/1.1 POST http://localhost:5080/api/webhooks/stripe - 400 - application/json;+charset=utf-8 1.2378ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 POST http://localhost:5080/api/webhooks/stripe - application/json 2
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -2259,11 +2259,11 @@ info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing BadRequestObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.StripeWebhookController.Stripe (CoreGym.Api) in 3.9248ms
+      Executed action CoreGym.Api.Controllers.StripeWebhookController.Stripe (CoreGym.Api) in 2.4729ms
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
       Executed endpoint 'CoreGym.Api.Controllers.StripeWebhookController.Stripe (CoreGym.Api)'
 info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 POST http://localhost:5080/api/webhooks/stripe - 400 - application/json;+charset=utf-8 4.2587ms
+      Request finished HTTP/1.1 POST http://localhost:5080/api/webhooks/stripe - 400 - application/json;+charset=utf-8 2.7126ms
 info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
       Request starting HTTP/1.1 POST http://localhost:5080/api/ai/food/text - application/json 17
 info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
@@ -2273,8 +2273,4 @@ info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[102]
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor[1]
       Executing ObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ProblemDetails'.
 info: Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker[105]
-      Executed action CoreGym.Api.Controllers.AiController.ExtractFromText (CoreGym.Api) in 25.5208ms
-info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
-      Executed endpoint 'CoreGym.Api.Controllers.AiController.ExtractFromText (CoreGym.Api)'
-info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
-      Request finished HTTP/1.1 POST http://localhost:5080/api/ai/food/text - 503 - application/problem+json;+charset=utf-8 35.1017ms
+      Executed action CoreGym.Api.Controllers.AiController.ExtractFromText (CoreGym.Api) in 15.2125ms

@@ -28,6 +28,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.CamelCase));
 });
 builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<CoreGymExceptionHandler>();
 
@@ -47,6 +48,9 @@ app.MapControllers();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    // Browsable, try-it-out UI at /swagger (serves the same OpenAPI document).
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.Run();

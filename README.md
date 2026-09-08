@@ -45,6 +45,8 @@ CoreGym.sln
 
 **Prerequisites:** .NET 10 SDK, SQL Server (any edition; tests use LocalDB `(localdb)\MSSQLLocalDB`), `dotnet-ef` tool (`dotnet tool install --global dotnet-ef`).
 
+**New here?** Follow the copy-paste terminal runbook [docs/RUNNING_LOCALLY.md](docs/RUNNING_LOCALLY.md) — run the API, browse & try every endpoint at `/swagger`, and inspect the database with `sqlcmd`.
+
 ### Verify everything in one command
 
 ```powershell
